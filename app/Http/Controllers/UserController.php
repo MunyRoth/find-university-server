@@ -33,6 +33,15 @@ class UserController extends Controller
         }
 
         $req = $request->all();
+
+        // Check if email is registered
+        if (User::where('email', '=', $req['email'])){
+            return Response([
+                'status' => 200,
+                'massage' => 'your email address is already registered',
+            ], 200);
+        }
+
         $req['password'] = bcrypt($req['password']);
 
         // store to database
