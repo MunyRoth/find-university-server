@@ -35,7 +35,7 @@ class UserController extends Controller
         $req = $request->all();
 
         // Check if email is registered
-        if (User::where('email', '=', $req['email'])){
+        if (User::where('email', '=', $req['email'])->exists()){
             return Response([
                 'status' => 200,
                 'massage' => 'your email address is already registered',
