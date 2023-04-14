@@ -32,13 +32,12 @@ class UniversityTypeController extends Controller
      */
     public function store(Request $request, UniversityType $universityType): Response
     {
-        $universityType->type = $request->type;
-        $universityType->save();
+        $universityType->create($request->all());
 
         return Response([
-            'status' => 200,
-            'data' => $universityType
-        ]);
+            'status' => 201,
+            'data' => $request->all()
+        ], 201);
     }
 
     /**
@@ -49,15 +48,18 @@ class UniversityTypeController extends Controller
         return Response([
             'status' => 200,
             'data' => $universityType
-        ]);
+        ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(UniversityType $universityType)
+    public function edit(UniversityType $universityType): Response
     {
-        //
+        return Response([
+            'status' => 200,
+            'data' => $universityType
+        ], 200);
     }
 
     /**
@@ -71,7 +73,7 @@ class UniversityTypeController extends Controller
         return Response([
             'status' => 200,
             'data' => $universityType
-        ]);
+        ], 200);
     }
 
     /**

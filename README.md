@@ -13,10 +13,10 @@ cp .env.example .env
 In .env please replace:
 ```
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=465
-MAIL_USERNAME="munyphunita@gmail.com"
-MAIL_PASSWORD="ysilepsgxrzxkdor"
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="munyphunita@gmail.com"
 MAIL_FROM_NAME="${APP_NAME}"

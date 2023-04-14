@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
+use App\Models\Major;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class DepartmentController extends Controller
+class MajorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Department $department): Response
+    public function index(Major $major): Response
     {
         return Response([
             'status' => 200,
-            'data' => $department->with('faculty')->get()
+            'data' => $major->with('department')->get()
         ], 200);
     }
 
@@ -29,9 +29,9 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Department  $department): Response
+    public function store(Request $request, Major  $major): Response
     {
-        $department->create($request->all());
+        $major->create($request->all());
 
         return Response([
             'status' => 201,
@@ -42,50 +42,50 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department): Response
+    public function show(Major $major): Response
     {
         return Response([
             'status' => '200',
-            'data' => $department
+            'data' => $major
         ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department): Response
+    public function edit(Major $major): Response
     {
         return Response([
             'status' => '200',
-            'data' => $department
+            'data' => $major
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department): Response
+    public function update(Request $request, Major $major): Response
     {
-        $department->name_km = $request->name_km;
-        $department->name_en = $request->name_en;
-        $department->save();
+        $major->name_km = $request->name_km;
+        $major->name_en = $request->name_en;
+        $major->save();
 
         return Response([
             'status' => 201,
-            'data' => $department
+            'data' => $major
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department): Response
+    public function destroy(Major $major): Response
     {
-        $department->delete();
+        $major->delete();
 
         return Response([
             'status' => 200,
-            'data' => $department
+            'data' => $major
         ], 200);
     }
 }

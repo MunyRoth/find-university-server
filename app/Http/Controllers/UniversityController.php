@@ -12,64 +12,94 @@ class UniversityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(University $university): Response
+    public function index(University $universities): Response
     {
         return Response([
             'status' => 200,
-            'data' => $university->get()
+            'data' => $universities->with('UniversityType')->get()
         ], 200);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-//        $universityType = UniversityType::pluck('type', 'id');
-//
-//        return Response([
-//            'status' => 200,
-//            'data' => $universityType
-//        ]);
+        $universityType = UniversityType::pluck('type', 'id');
+
+        return Response([
+            'status' => 200,
+            'universityTypes' => $universityType
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, University  $university): Response
     {
-        //
+        $university->create($request->all());
+
+        return Response([
+            'status' => 201,
+            'data' => $request->all()
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(University $university): Response
     {
-        //
+        return Response([
+            'status' => '200',
+            'data' => $university
+        ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(University $university): Response
     {
-        //
+        return Response([
+            'status' => '200',
+            'data' => $university
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, University  $university): Response
     {
-        //
+        $university->name_km = $request->name_km;
+        $university->name_en = $request->name_en;
+        $university->about_km = $request->about_km;
+        $university->about_en = $request->about_en;
+        $university->logo = $request->logo;
+        $university->website = $request->website;
+        $university->email = $request->email;
+        $university->phone = $request->phone;
+        $university->image = $request->image;
+        $university->save();
+
+        return Response([
+            'status' => 201,
+            'data' => $university
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(University $university): Response
     {
-        //
+        $university->delete();
+
+        return Response([
+            'status' => 200,
+            'data' => $university
+        ], 200);
     }
 }

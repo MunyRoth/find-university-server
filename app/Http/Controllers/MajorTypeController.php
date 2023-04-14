@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
+use App\Models\MajorType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class DepartmentController extends Controller
+class MajorTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Department $department): Response
+    public function index(MajorType $majorType): Response
     {
         return Response([
             'status' => 200,
-            'data' => $department->with('faculty')->get()
+            'data' => $majorType->with('department')->get()
         ], 200);
     }
 
@@ -29,9 +29,9 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Department  $department): Response
+    public function store(Request $request, MajorType  $majorType): Response
     {
-        $department->create($request->all());
+        $majorType->create($request->all());
 
         return Response([
             'status' => 201,
@@ -42,50 +42,50 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department): Response
+    public function show(MajorType $majorType): Response
     {
         return Response([
             'status' => '200',
-            'data' => $department
+            'data' => $majorType
         ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department): Response
+    public function edit(MajorType $majorType): Response
     {
         return Response([
             'status' => '200',
-            'data' => $department
+            'data' => $majorType
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department): Response
+    public function update(Request $request, MajorType $majorType): Response
     {
-        $department->name_km = $request->name_km;
-        $department->name_en = $request->name_en;
-        $department->save();
+        $majorType->name_km = $request->name_km;
+        $majorType->name_en = $request->name_en;
+        $majorType->save();
 
         return Response([
             'status' => 201,
-            'data' => $department
+            'data' => $majorType
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department): Response
+    public function destroy(MajorType $majorType): Response
     {
-        $department->delete();
+        $majorType->delete();
 
         return Response([
             'status' => 200,
-            'data' => $department
+            'data' => $majorType
         ], 200);
     }
 }

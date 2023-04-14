@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignid('university_type_id')->references('id')->on('university_types');
             $table->string('name_km');
-            $table->string('name_en');
+            $table->string('name_en')->nullable();
             $table->string('about_km');
-            $table->string('about_en');
-            $table->json('logo');
-            $table->string('website');
-            $table->string('email');
-            $table->string('phone');
-            $table->json('images');
+            $table->string('about_en')->nullable();
+            $table->longtext('logo')->nullable();
+            $table->string('website')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->json('images')->nullable();
             $table->timestamps();
         });
     }

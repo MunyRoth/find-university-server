@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Faculty extends Model
+class Year extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'university_id',
+        'major_id',
         'name',
     ];
 
-    public function university(): BelongsTo
+    public function major(): BelongsTo
     {
-        return $this->belongsTo(University::class);
+        return $this->belongsTo(Major::class);
     }
 }

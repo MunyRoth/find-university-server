@@ -51,10 +51,10 @@ class UserController extends Controller
         event(new Registered($user));
 
         return Response([
-            'status' => 200,
+            'status' => 201,
             'massage' => 'register successful',
             'token' => $user->createToken('example')->accessToken,
-        ], 200);
+        ], 201);
     }
 
     /**

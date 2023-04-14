@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('faculties', function (Blueprint $table) {
             $table->id();
             $table->foreignid('university_id')->references('id')->on('universities');
-            $table->string('name');
+            $table->string('name_km');
+            $table->string('name_en')->nullable();
             $table->timestamps();
         });
     }

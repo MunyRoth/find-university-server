@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->foreignid('semester_id')->references('id')->on('semesters');
-            $table->string('name');
+            $table->string('name_km');
+            $table->string('name_en')->nullable();
             $table->timestamps();
         });
     }
