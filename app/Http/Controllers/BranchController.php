@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Semester;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class SemesterController extends Controller
+class BranchController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Semester $semester): Response
+    public function index(Branch $branch): Response
     {
         return Response([
             'status' => 200,
-            'data' => $semester->with('year')->get()
+            'data' => $branch->get()
         ], 200);
     }
 
@@ -24,67 +24,71 @@ class SemesterController extends Controller
      */
     public function create()
     {
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Semester  $semester): Response
+    public function store(Request $request, Branch $branch): Response
     {
-        $semester->create($request->all());
+        $branch->create($request->all());
 
         return Response([
             'status' => 201,
             'data' => $request->all()
-        ]);
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Semester $semester): Response
+    public function show(Branch $branch): Response
     {
         return Response([
-            'status' => '200',
-            'data' => $semester
+            'status' => 200,
+            'data' => $branch
         ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Semester $semester): Response
+    public function edit(Branch $branch): Response
     {
         return Response([
-            'status' => '200',
-            'data' => $semester
+            'status' => 200,
+            'data' => $branch
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Semester $semester): Response
+    public function update(Request $request, Branch $branch): Response
     {
-        $semester->semester = $request->semester;
-        $semester->save();
+        $branch->university_id = $request->university_id;
+        $branch->province_id = $request->province_id;
+        $branch->address_km = $request->address_km;
+        $branch->address_en = $request->address_en;
+        $branch->save();
 
         return Response([
             'status' => 200,
-            'data' => $semester
-        ]);
+            'data' => $branch
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Semester $semester): Response
+    public function destroy(Branch $branch): Response
     {
-        $semester->delete();
+        $branch->delete();
 
         return Response([
             'status' => 200,
-            'data' => $semester
-        ], 200);
+            'data' => $branch
+        ]);
     }
 }

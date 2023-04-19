@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rate;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RateController extends Controller
 {
@@ -25,9 +27,14 @@ class RateController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Rate $rate): Response
     {
-        //
+        $rate->create($request->all());
+
+        return Response([
+            'status' => 201,
+            'data' => $request->all()
+        ], 201);
     }
 
     /**

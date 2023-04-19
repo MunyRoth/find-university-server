@@ -71,7 +71,7 @@ class DepartmentController extends Controller
         $department->save();
 
         return Response([
-            'status' => 201,
+            'status' => 200,
             'data' => $department
         ]);
     }

@@ -71,7 +71,7 @@ class MajorController extends Controller
         $major->save();
 
         return Response([
-            'status' => 201,
+            'status' => 200,
             'data' => $major
         ]);
     }

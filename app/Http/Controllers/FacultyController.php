@@ -71,7 +71,7 @@ class FacultyController extends Controller
         $faculty->save();
 
         return Response([
-            'status' => 201,
+            'status' => 200,
             'data' => $faculty
         ]);
     }

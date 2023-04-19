@@ -81,11 +81,11 @@ class UniversityController extends Controller
         $university->website = $request->website;
         $university->email = $request->email;
         $university->phone = $request->phone;
-        $university->image = $request->image;
+        $university->images = $request->images;
         $university->save();
 
         return Response([
-            'status' => 201,
+            'status' => 200,
             'data' => $university
         ]);
     }

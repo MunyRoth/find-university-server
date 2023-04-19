@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Semester;
+use App\Models\Branch;
+use App\Models\Province;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class SemesterController extends Controller
+class ProvinceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Semester $semester): Response
+    public function index(Province $province): Response
     {
         return Response([
             'status' => 200,
-            'data' => $semester->with('year')->get()
+            'data' => $province->get()
         ], 200);
     }
 
@@ -24,67 +25,68 @@ class SemesterController extends Controller
      */
     public function create()
     {
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Semester  $semester): Response
+    public function store(Request $request, Province $province): Response
     {
-        $semester->create($request->all());
+        $province->create($request->all());
 
         return Response([
             'status' => 201,
             'data' => $request->all()
-        ]);
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Semester $semester): Response
+    public function show(Province $province): Response
     {
         return Response([
-            'status' => '200',
-            'data' => $semester
+            'status' => 200,
+            'data' => $province
         ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Semester $semester): Response
+    public function edit(Province $province): Response
     {
         return Response([
-            'status' => '200',
-            'data' => $semester
+            'status' => 200,
+            'data' => $province
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Semester $semester): Response
+    public function update(Request $request, Province $province): Response
     {
-        $semester->semester = $request->semester;
-        $semester->save();
+        $province->province = $request->province;
+        $province->save();
 
         return Response([
             'status' => 200,
-            'data' => $semester
-        ]);
+            'data' => $province
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Semester $semester): Response
+    public function destroy(Province $province): Response
     {
-        $semester->delete();
+        $province->delete();
 
         return Response([
             'status' => 200,
-            'data' => $semester
-        ], 200);
+            'data' => $province
+        ]);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CommentController extends Controller
 {
@@ -25,9 +27,14 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Comment $comment): Response
     {
-        //
+        $comment->create($request->all());
+
+        return Response([
+            'status' => 201,
+            'data' => $request->all()
+        ], 201);
     }
 
     /**
