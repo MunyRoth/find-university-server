@@ -28,5 +28,6 @@ MAIL_FROM_NAME="${APP_NAME}"
 ```bash
 php artisan key:generate
 php artisan migrate
+php artisan passport:install
 php artisan serve
 ```
