@@ -5,6 +5,7 @@
 ### Run terminal clone from GitHub repository
 ```bash
 git clone https://github.com/MunyRoth/find-university-server.git
+cd find-university-server
 composer install
 cp .env.example .env
 ```
