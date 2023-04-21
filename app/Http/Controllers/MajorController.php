@@ -66,6 +66,7 @@ class MajorController extends Controller
      */
     public function update(Request $request, Major $major): Response
     {
+        $major->major_type_id = $major->major_type_id;
         $major->name_km = $request->name_km;
         $major->name_en = $request->name_en;
         $major->save();
