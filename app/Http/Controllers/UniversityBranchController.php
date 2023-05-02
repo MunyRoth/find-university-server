@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
+use App\Models\UniversityBranch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class BranchController extends Controller
+class UniversityBranchController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Branch $branch): Response
+    public function index(UniversityBranch $branch): Response
     {
         return Response([
             'status' => 200,
@@ -30,7 +30,7 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Branch $branch): Response
+    public function store(Request $request, UniversityBranch $branch): Response
     {
         $branch->create($request->all());
 
@@ -43,7 +43,7 @@ class BranchController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Branch $branch): Response
+    public function show(UniversityBranch $branch): Response
     {
         return Response([
             'status' => 200,
@@ -54,7 +54,7 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Branch $branch): Response
+    public function edit(UniversityBranch $branch): Response
     {
         return Response([
             'status' => 200,
@@ -65,7 +65,7 @@ class BranchController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Branch $branch): Response
+    public function update(Request $request, UniversityBranch $branch): Response
     {
         $branch->university_id = $request->university_id;
         $branch->province_id = $request->province_id;
@@ -82,7 +82,7 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Branch $branch): Response
+    public function destroy(UniversityBranch $branch): Response
     {
         $branch->delete();
 

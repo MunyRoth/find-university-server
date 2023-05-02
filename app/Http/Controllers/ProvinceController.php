@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
+use App\Models\UniversityBranch;
 use App\Models\Province;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

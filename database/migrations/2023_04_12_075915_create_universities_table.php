@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('name_en')->nullable();
             $table->string('about_km');
             $table->string('about_en')->nullable();
-            $table->longtext('logo')->nullable();
+            $table->string('logo')->nullable();
             $table->string('website')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->json('images')->nullable();
+            $table->string('images')->nullable();
             $table->timestamps();
         });
     }

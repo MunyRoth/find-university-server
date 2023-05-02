@@ -5,9 +5,11 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\MajorTypeController;
+use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\RateController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\UniversityBranchController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\UniversityTypeController;
 use App\Http\Controllers\UserController;
@@ -51,10 +53,13 @@ Route::post('email/verify', function (Request $request) {
     ], 200);
 })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
+Route::resource('provinces', ProvinceController::class);
 Route::resource('major_types', MajorTypeController::class);
 
 Route::resource('university_types', UniversityTypeController::class);
 Route::resource('universities', UniversityController::class);
+Route::get('images/{name}', [UniversityController::class, 'getLogo']);
+Route::resource('university_branches', UniversityBranchController::class);
 Route::resource('faculties', FacultyController::class);
 Route::resource('departments', DepartmentController::class);
 Route::resource('majors', MajorController::class);

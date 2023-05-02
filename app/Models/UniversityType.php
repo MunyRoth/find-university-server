@@ -10,6 +10,7 @@ class UniversityType extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type',
+        'type_km',
+        'type_en',
     ];
 }

@@ -10,6 +10,7 @@ class Province extends Model
     use HasFactory;
 
     protected $fillable = [
-        'province',
+        'province_name_km',
+        'province_name_en',
     ];
 }
