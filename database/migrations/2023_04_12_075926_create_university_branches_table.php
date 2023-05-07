@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('province_id')->references('id')->on('provinces');
             $table->string('address_km');
             $table->string('address_en')->nullable();
+            $table->string('location');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('university_branches');
     }
 };

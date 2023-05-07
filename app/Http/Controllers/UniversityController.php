@@ -7,6 +7,7 @@ use App\Models\UniversityType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class UniversityController extends Controller
 {
@@ -17,7 +18,7 @@ class UniversityController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $universities->with('UniversityType')->get()
+            'data' => $universities->with('universityType', 'universityBranches')->get()
         ], 200);
     }
 
@@ -39,12 +40,19 @@ class UniversityController extends Controller
      */
     public function store(Request $request, University  $university): Response
     {
-        if (empty($request->file('logo')))
-        {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'university_type_id' => 'required|max:255',
+            'name_km' => 'required|max:255',
+            'about_km' => 'required|max:255',
+            'logo' => 'required|image|mimes:jpeg,jpg,png|max:3072',
+        ]);
+
+        if ($validator->fails()){
             return Response([
-                'status' => 200,
-                'message' => 'file does not exist'
-            ], 200);
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
         }
 
         $logo = $request->logo;
@@ -58,7 +66,6 @@ class UniversityController extends Controller
             $imageName = time().'image.'.$image->extension();
             $image->storeAs("/images", $imageName);
         }
-
 
         $university->university_type_id = $request->university_type_id;
         $university->logo = $logoName;

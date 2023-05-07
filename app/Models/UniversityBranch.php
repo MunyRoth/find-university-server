@@ -13,6 +13,7 @@ class UniversityBranch extends Model
         'university_id',
         'province_id',
         'address_km',
-        'address_en'
+        'address_en',
+        'location',
     ];
 }
