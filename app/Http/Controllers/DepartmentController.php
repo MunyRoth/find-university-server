@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {
@@ -31,6 +32,19 @@ class DepartmentController extends Controller
      */
     public function store(Request $request, Department  $department): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'faculty_id' => 'required|max:127',
+            'name_km' => 'required|max:127'
+        ]);
+                        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $department->create($request->all());
 
         return Response([

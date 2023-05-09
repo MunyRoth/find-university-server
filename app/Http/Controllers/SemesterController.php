@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class SemesterController extends Controller
 {
@@ -31,6 +32,18 @@ class SemesterController extends Controller
      */
     public function store(Request $request, Semester  $semester): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'semester' => 'required|max:127',
+        ]);
+        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $semester->create($request->all());
 
         return Response([

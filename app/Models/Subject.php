@@ -11,12 +11,15 @@ class Subject extends Model
     use HasFactory;
 
     protected $fillable = [
+        'major_id',
+        'year_id',
         'semester_id',
-        'name',
+        'name_km',
+        'name_en',
     ];
 
-    public function subject(): BelongsTo
+    public function major(): BelongsTo
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsTo(Major::class);
     }
 }

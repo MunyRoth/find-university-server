@@ -21,7 +21,8 @@ class UserController extends Controller
             'email' =>'required|email|max:255',
             'fullName' =>'required|max:255',
             'password' =>'required|min:8',
-            'cfPassword' =>'required|same:password'
+            'cfPassword' =>'required|same:password',
+            'role' => 'required',
         ]);
 
         if ($validator->fails()){

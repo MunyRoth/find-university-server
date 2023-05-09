@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+            $table->foreignid('major_id')->references('id')->on('majors');
+            $table->foreignid('year_id')->references('id')->on('years');
             $table->foreignid('semester_id')->references('id')->on('semesters');
             $table->string('name_km');
             $table->string('name_en')->nullable();

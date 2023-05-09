@@ -6,6 +6,7 @@ use App\Models\UniversityBranch;
 use App\Models\Province;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ProvinceController extends Controller
 {
@@ -33,6 +34,18 @@ class ProvinceController extends Controller
      */
     public function store(Request $request, Province $province): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'name_km' => 'required|max:127',
+        ]);
+                        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $province->create($request->all());
 
         return Response([

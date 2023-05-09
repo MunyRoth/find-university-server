@@ -12,7 +12,8 @@ class Faculty extends Model
 
     protected $fillable = [
         'university_id',
-        'name',
+        'name_km',
+        'name_en',
     ];
 
     public function university(): BelongsTo

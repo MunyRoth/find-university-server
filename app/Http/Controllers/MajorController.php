@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Major;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class MajorController extends Controller
 {
@@ -31,6 +32,19 @@ class MajorController extends Controller
      */
     public function store(Request $request, Major  $major): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'department_id' => 'required|max:127',
+            'major_type_id' => 'required|max:127',
+            'name_km' => 'required|max:127'
+        ]);
+                        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
         $major->create($request->all());
 
         return Response([

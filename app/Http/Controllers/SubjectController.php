@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class SubjectController extends Controller
 {
@@ -31,6 +32,21 @@ class SubjectController extends Controller
      */
     public function store(Request $request, Subject  $subject): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'major_id' => 'required|max:127',
+            'year_id' => 'required|max:2',
+            'semester_id' => 'required|max:2',
+            'name_km' => 'required|max:127',
+        ]);
+        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $subject->create($request->all());
 
         return Response([

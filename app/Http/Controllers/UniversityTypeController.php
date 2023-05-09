@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UniversityType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UniversityTypeController extends Controller
 {
@@ -32,6 +33,18 @@ class UniversityTypeController extends Controller
      */
     public function store(Request $request, UniversityType $universityType): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'type_km' => 'required|max:127',
+        ]);
+        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $universityType->create($request->all());
 
         return Response([

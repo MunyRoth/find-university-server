@@ -10,6 +10,7 @@ class MajorType extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'name_km',
+        'name_en',
     ];
 }

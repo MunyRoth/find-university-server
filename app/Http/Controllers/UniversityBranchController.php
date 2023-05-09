@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UniversityBranch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UniversityBranchController extends Controller
 {
@@ -32,6 +33,20 @@ class UniversityBranchController extends Controller
      */
     public function store(Request $request, UniversityBranch $branch): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'university_id' => 'required|max:127',
+            'province_id' => 'required|max:63',
+            'address_km' => 'required|max:127',
+        ]);
+                
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $branch->create($request->all());
 
         return Response([

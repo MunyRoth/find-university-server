@@ -11,12 +11,6 @@ class Year extends Model
     use HasFactory;
 
     protected $fillable = [
-        'major_id',
-        'name',
+        'year',
     ];
-
-    public function major(): BelongsTo
-    {
-        return $this->belongsTo(Major::class);
-    }
 }

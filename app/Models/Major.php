@@ -13,7 +13,8 @@ class Major extends Model
     protected $fillable = [
         'department_id',
         'major_type_id',
-        'name',
+        'name_km',
+        'name_en'
     ];
 
     public function majorType(): BelongsTo

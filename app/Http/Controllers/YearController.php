@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class YearController extends Controller
 {
@@ -31,6 +32,18 @@ class YearController extends Controller
      */
     public function store(Request $request, Year  $year): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'year' => 'required|max:2',
+        ]);
+        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $year->create($request->all());
 
         return Response([

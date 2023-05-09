@@ -68,4 +68,4 @@ Route::resource('departments', DepartmentController::class);
 Route::resource('majors', MajorController::class);
 Route::resource('years', YearController::class);
 Route::resource('semesters', SemesterController::class);
-Route::resource('subject', SubjectController::class);
+Route::resource('subjects', SubjectController::class);

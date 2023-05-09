@@ -31,4 +31,18 @@ class University extends Model
     {
         return $this->hasMany(UniversityBranch::class);
     }
+
+    public function faculties(): HasMany
+    {
+        return $this->hasMany(faculty::class);
+    }
+
+    // this is a recommended way to declare event handlers
+    protected static function booted () {
+        static::deleting(function(University $university) { // before delete() method call this
+             $university->universityBranches()->delete();
+             $university->faculties()->delete();
+             // do the rest of the cleanup...
+        });
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Faculty;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class FacultyController extends Controller
 {
@@ -31,6 +32,19 @@ class FacultyController extends Controller
      */
     public function store(Request $request, Faculty  $faculty): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'university_id' => 'required|max:127',
+            'name_km' => 'required|max:127'
+        ]);
+                        
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $faculty->create($request->all());
 
         return Response([
