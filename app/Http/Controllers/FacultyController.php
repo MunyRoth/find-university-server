@@ -37,7 +37,7 @@ class FacultyController extends Controller
             'university_id' => 'required|max:127',
             'name_km' => 'required|max:127'
         ]);
-                        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -99,7 +99,7 @@ class FacultyController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $faculty
+            'message' => 'deleted successfully'
         ], 200);
     }
 }

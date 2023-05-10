@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('provinces', function (Blueprint $table) {
             $table->id();
-            $table->string('name_km');
-            $table->string('name_en')->nullable();
+            $table->string('name_km', 31);
+            $table->string('name_en', 31)
+                ->nullable();
             $table->timestamps();
         });
     }

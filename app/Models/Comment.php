@@ -13,7 +13,7 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'university_id',
-        'comment_text'
+        'comment'
     ];
 
     public function user(): BelongsTo

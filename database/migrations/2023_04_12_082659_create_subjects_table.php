@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignid('major_id')->references('id')->on('majors');
-            $table->foreignid('year_id')->references('id')->on('years');
-            $table->foreignid('semester_id')->references('id')->on('semesters');
+            $table->foreignid('major_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignid('year_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignid('semester_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->string('name_km');
-            $table->string('name_en')->nullable();
+            $table->string('name_en')
+                ->nullable();
             $table->timestamps();
         });
     }

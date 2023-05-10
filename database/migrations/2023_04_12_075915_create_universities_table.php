@@ -13,16 +13,25 @@ return new class extends Migration
     {
         Schema::create('universities', function (Blueprint $table) {
             $table->id();
-            $table->foreignid('university_type_id')->references('id')->on('university_types');
+            $table->foreignid('university_type_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->string('name_km');
-            $table->string('name_en')->nullable();
-            $table->string('about_km');
-            $table->string('about_en')->nullable();
-            $table->string('logo')->nullable();
-            $table->string('website')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('images')->nullable();
+            $table->string('name_en')
+                ->nullable();
+            $table->text('about_km');
+            $table->text('about_en')
+                ->nullable();
+            $table->string('logo')
+                ->nullable();
+            $table->string('website')
+                ->nullable();
+            $table->string('email')
+                ->nullable();
+            $table->string('phone', 63)
+                ->nullable();
+            $table->string('images')
+                ->nullable();
             $table->timestamps();
         });
     }

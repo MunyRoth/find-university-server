@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('university_branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('university_id')->references('id')->on('universities');
-            $table->foreignId('province_id')->references('id')->on('provinces');
-            $table->string('address_km');
-            $table->string('address_en')->nullable();
+            $table->foreignId('university_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignId('province_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->text('address_km');
+            $table->text('address_en')
+                ->nullable();
             $table->string('location');
             $table->timestamps();
         });

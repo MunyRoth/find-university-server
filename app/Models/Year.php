@@ -11,6 +11,6 @@ class Year extends Model
     use HasFactory;
 
     protected $fillable = [
-        'year',
+        'year'
     ];
 }

@@ -21,13 +21,6 @@ class MajorTypeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, MajorType  $majorType): Response
@@ -36,14 +29,14 @@ class MajorTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'name_km' => 'required|max:127'
         ]);
-                        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
                 'massage' => 'validation failed'
             ], 403);
         }
-        
+
         $majorType->create($request->all());
 
         return Response([
@@ -56,17 +49,6 @@ class MajorTypeController extends Controller
      * Display the specified resource.
      */
     public function show(MajorType $majorType): Response
-    {
-        return Response([
-            'status' => '200',
-            'data' => $majorType
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MajorType $majorType): Response
     {
         return Response([
             'status' => '200',
@@ -98,7 +80,7 @@ class MajorTypeController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $majorType
+            'message' => 'deleted successfully'
         ], 200);
     }
 }

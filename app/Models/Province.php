@@ -11,6 +11,6 @@ class Province extends Model
 
     protected $fillable = [
         'name_km',
-        'name_en',
+        'name_en'
     ];
 }

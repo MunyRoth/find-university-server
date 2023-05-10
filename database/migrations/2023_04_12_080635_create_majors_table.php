@@ -13,10 +13,16 @@ return new class extends Migration
     {
         Schema::create('majors', function (Blueprint $table) {
             $table->id();
-            $table->foreignid('department_id')->references('id')->on('departments');
-            $table->foreignid('major_type_id')->references('id')->on('major_types');
+            $table->foreignid('department_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignid('major_type_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->string('name_km');
-            $table->string('name_en')->nullable();
+            $table->string('name_en')
+                ->nullable();
+            $table->integer('num_semesters');
             $table->timestamps();
         });
     }

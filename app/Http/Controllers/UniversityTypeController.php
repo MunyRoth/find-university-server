@@ -35,9 +35,9 @@ class UniversityTypeController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'type_km' => 'required|max:127',
+            'type_km' => 'required|max:31'
         ]);
-        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -98,7 +98,7 @@ class UniversityTypeController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $universityType
-        ]);
+            'message' => 'deleted successfully'
+        ], 200);
     }
 }

@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('university_types', function (Blueprint $table) {
             $table->id();
-            $table->string('type_km');
-            $table->string('type_en')->nullable();
+            $table->string('type_km', 15);
+            $table->string('type_en', 15)
+                ->nullable();
             $table->timestamps();
         });
     }

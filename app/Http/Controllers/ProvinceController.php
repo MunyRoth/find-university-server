@@ -36,9 +36,9 @@ class ProvinceController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'name_km' => 'required|max:127',
+            'name_km' => 'required|max:127'
         ]);
-                        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -99,7 +99,7 @@ class ProvinceController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $province
-        ]);
+            'message' => 'deleted successfully'
+        ], 200);
     }
 }

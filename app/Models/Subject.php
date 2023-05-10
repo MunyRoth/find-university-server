@@ -15,7 +15,7 @@ class Subject extends Model
         'year_id',
         'semester_id',
         'name_km',
-        'name_en',
+        'name_en'
     ];
 
     public function major(): BelongsTo

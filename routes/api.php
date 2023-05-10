@@ -57,7 +57,6 @@ Route::resource('provinces', ProvinceController::class);
 Route::resource('major_types', MajorTypeController::class);
 
 Route::resource('university_types', UniversityTypeController::class);
-
 Route::resource('universities', UniversityController::class);
 
 Route::get('images/{name}', [UniversityController::class, 'getLogo']);

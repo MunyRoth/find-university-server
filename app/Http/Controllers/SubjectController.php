@@ -21,13 +21,6 @@ class SubjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Subject  $subject): Response
@@ -37,9 +30,9 @@ class SubjectController extends Controller
             'major_id' => 'required|max:127',
             'year_id' => 'required|max:2',
             'semester_id' => 'required|max:2',
-            'name_km' => 'required|max:127',
+            'name_km' => 'required|max:63'
         ]);
-        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -59,17 +52,6 @@ class SubjectController extends Controller
      * Display the specified resource.
      */
     public function show(Subject $subject): Response
-    {
-        return Response([
-            'status' => '200',
-            'data' => $subject
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Subject $subject): Response
     {
         return Response([
             'status' => '200',
@@ -101,7 +83,7 @@ class SubjectController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $subject
+            'message' => 'deleted successfully'
         ], 200);
     }
 }

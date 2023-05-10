@@ -21,13 +21,6 @@ class YearController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Year  $year): Response
@@ -36,7 +29,7 @@ class YearController extends Controller
         $validator = Validator::make($request->all(), [
             'year' => 'required|max:2',
         ]);
-        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -56,17 +49,6 @@ class YearController extends Controller
      * Display the specified resource.
      */
     public function show(Year $year): Response
-    {
-        return Response([
-            'status' => '200',
-            'data' => $year
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Year $year): Response
     {
         return Response([
             'status' => '200',
@@ -97,7 +79,7 @@ class YearController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $year
+            'message' => 'deleted successfully'
         ], 200);
     }
 }

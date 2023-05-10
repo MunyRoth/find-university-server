@@ -14,7 +14,8 @@ class Major extends Model
         'department_id',
         'major_type_id',
         'name_km',
-        'name_en'
+        'name_en',
+        'num_semesters'
     ];
 
     public function majorType(): BelongsTo

@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('major_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name_km');
-            $table->string('name_en')->nullable();
+            $table->string('name_km', 63);
+            $table->string('name_en', 63)
+                ->nullable();
             $table->timestamps();
         });
     }

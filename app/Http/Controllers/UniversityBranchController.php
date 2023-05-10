@@ -37,9 +37,9 @@ class UniversityBranchController extends Controller
         $validator = Validator::make($request->all(), [
             'university_id' => 'required|max:127',
             'province_id' => 'required|max:63',
-            'address_km' => 'required|max:127',
+            'address_km' => 'required|max:127'
         ]);
-                
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -103,7 +103,7 @@ class UniversityBranchController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $branch
-        ]);
+            'message' => 'deleted successfully'
+        ], 200);
     }
 }

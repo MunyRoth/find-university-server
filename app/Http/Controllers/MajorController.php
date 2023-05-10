@@ -36,9 +36,10 @@ class MajorController extends Controller
         $validator = Validator::make($request->all(), [
             'department_id' => 'required|max:127',
             'major_type_id' => 'required|max:127',
-            'name_km' => 'required|max:127'
+            'name_km' => 'required|max:127',
+            'num_semesters' => 'required|max:2'
         ]);
-                        
+
         if ($validator->fails()){
             return Response([
                 'status' => 403,
@@ -100,7 +101,7 @@ class MajorController extends Controller
 
         return Response([
             'status' => 200,
-            'data' => $major
+            'message' => 'deleted successfully'
         ], 200);
     }
 }
