@@ -16,7 +16,7 @@ class SubjectController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $subject->with('semester')->get()
+            'data' => $subject->get()
         ], 200);
     }
 

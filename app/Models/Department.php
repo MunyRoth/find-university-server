@@ -16,7 +16,7 @@ class Department extends Model
         'name_en'
     ];
 
-    public function major(): HasMany
+    public function majors(): HasMany
     {
         return $this->hasMany(Major::class);
     }

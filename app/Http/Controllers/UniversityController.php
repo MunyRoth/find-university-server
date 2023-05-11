@@ -79,7 +79,7 @@ class UniversityController extends Controller
     {
         return Response([
             'status' => '200',
-            'data' => $university
+            'data' => $university->load('universityType', 'universityBranches', 'faculties.departments.majors.subjects')
         ], 200);
     }
     public function getLogo($name): Response
@@ -101,7 +101,7 @@ class UniversityController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, University  $university): Response
+    public function update(Request $request, University $university): Response
     {
         $logo = $request->logo;
         $logoName = time().'logo.'.$logo->extension();

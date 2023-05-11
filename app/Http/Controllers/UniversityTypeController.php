@@ -21,14 +21,6 @@ class UniversityTypeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, UniversityType $universityType): Response
@@ -54,33 +46,12 @@ class UniversityTypeController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(UniversityType $universityType): Response
-    {
-        return Response([
-            'status' => 200,
-            'data' => $universityType
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UniversityType $universityType): Response
-    {
-        return Response([
-            'status' => 200,
-            'data' => $universityType
-        ], 200);
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, UniversityType $universityType): Response
     {
-        $universityType->type = $request->type;
+        $universityType->type_km = $request->type_km;
+        $universityType->type_en = $request->type_en;
         $universityType->save();
 
         return Response([
