@@ -6,6 +6,7 @@ use App\Models\University;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UniversityController extends Controller
@@ -42,19 +43,19 @@ class UniversityController extends Controller
         }
 
         $logo = $request->logo;
-        $logoName = time().'logo.'.$logo->extension();
-        $logo->storeAs("/images", $logoName);
+        Storage::put('images', $logo);
 
         $imageName = null;
         if (!empty($request->file('image')))
         {
             $image = $request->image;
-            $imageName = time().'image.'.$image->extension();
-            $image->storeAs("/images", $imageName);
+            Storage::put('images', $image);
+
+            $imageName = $image->hashName();
         }
 
         $university->university_type_id = $request->university_type_id;
-        $university->logo = $logoName;
+        $university->logo = $logo->hashName();
         $university->name_km = $request->name_km;
         $university->name_en = $request->name_en;
         $university->about_km = $request->about_km;
@@ -88,7 +89,7 @@ class UniversityController extends Controller
 
         if (!File::exists($path)) {
             return Response([
-                'status' => '404',
+                'status' => $path,
             ], 404);
         }
 
@@ -103,29 +104,79 @@ class UniversityController extends Controller
      */
     public function update(Request $request, University $university): Response
     {
-        $logo = $request->logo;
-        $logoName = time().'logo.'.$logo->extension();
-        $logo->storeAs("/images", $logoName);
-
-        $imageName = null;
-        if (!empty($request->file('image')))
+        // update logo
+        if (!empty($request->logo))
         {
-            $image = $request->image;
-            $imageName = time().'image.'.$image->extension();
-            $image->storeAs("/images", $imageName);
+            // Delete the old image file.
+            Storage::delete('images/' . $university->logo);
+
+            //upload new file
+            $logo = $request->logo;
+            Storage::put('images', $logo);
+
+            //update in table
+            $university->update([
+                'logo' => $logo->hashName()
+            ]);
         }
 
-        $university->university_type_id = $request->university_type_id;
-        $university->logo = $logoName;
-        $university->name_km = $request->name_km;
-        $university->name_en = $request->name_en;
-        $university->about_km = $request->about_km;
-        $university->about_en = $request->about_en;
-        $university->website = $request->website;
-        $university->email = $request->email;
-        $university->phone = $request->phone;
-        $university->images = $imageName;
-        $university->save();
+        if ($request->name_km != '') {
+            $university->update([
+                'name_km' => $request->name_km,
+            ]);
+        }
+
+        if ($request->name_en != '') {
+            $university->update([
+                'name_en' => $request->name_en,
+            ]);
+        }
+
+        if ($request->about_km != '') {
+            $university->update([
+                'about_km' => $request->about_km,
+            ]);
+        }
+
+        if ($request->about_en != '') {
+            $university->update([
+                'about_en' => $request->about_en,
+            ]);
+        }
+
+        // update image
+        if (!empty($request->image))
+        {
+            // Delete the old image file.
+            Storage::delete('images/' . $university->images);
+
+            //upload new file
+            $image = $request->image;
+            Storage::put('images', $image);
+
+            //update in table
+            $university->update([
+                'images' => $image->hashName()
+            ]);
+        }
+
+        if ($request->website != '') {
+            $university->update([
+                'website' => $request->website,
+            ]);
+        }
+
+        if ($request->email != '') {
+            $university->update([
+                'email' => $request->email,
+            ]);
+        }
+
+        if ($request->phone != '') {
+            $university->update([
+                'phone' => $request->phone,
+            ]);
+        }
 
         return Response([
             'status' => 200,
@@ -139,6 +190,9 @@ class UniversityController extends Controller
     public function destroy(University $university): Response
     {
         $university->delete();
+
+        // Delete the old image file.
+        Storage::delete('images/' . $university->logo);
 
         return Response([
             'status' => 200,
