@@ -16,7 +16,7 @@ class VerifyEmailController extends Controller
         if ($user->hasVerifiedEmail()) {
             return Response([
                 'status' => 200,
-                'message' => 'Verified email'
+                'message' => 'email is verified'
             ], 200);
 //            return redirect(env('FRONT_URL') . '/email/verify/already-success');
         }
@@ -27,7 +27,7 @@ class VerifyEmailController extends Controller
 
         return Response([
             'status' => 200,
-            'massage' => 'Your account has been verified'
+            'massage' => 'your account has been verified already'
         ], 200);
 //        return redirect(env('FRONT_URL') . '/email/verify/success');
     }

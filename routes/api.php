@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\MajorTypeController;
 use App\Http\Controllers\ProvinceController;
@@ -29,12 +30,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route for user
+// Route for user and authentication
+// Email register and login
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
+// Social login
+Route::get('auth/{provider}', [UserController::class, 'redirectToProvider']);
+Route::get('auth/{provider}/callback', [UserController::class, 'handleProviderCallback']);
+// Get user information
 Route::middleware('auth:api')->group(function () {
     Route::get('logout', [UserController::class, 'logout']);
-    Route::get('user', [UserController::class, 'getDetail']);
+    Route::get('user', [UserController::class, 'getUser']);
+    Route::put('user', [UserController::class, 'editUser']);
 
     Route::resource('comment', CommentController::class);
     Route::resource('rate', RateController::class);
@@ -53,14 +60,14 @@ Route::post('email/verify', function (Request $request) {
     ], 200);
 })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
+Route::post('image/{name}', [ImageController::class, 'store']);
+Route::get('image/{name}', [ImageController::class, 'show']);
+
 Route::resource('provinces', ProvinceController::class);
 Route::resource('major_types', MajorTypeController::class);
 
 Route::resource('university_types', UniversityTypeController::class);
 Route::resource('universities', UniversityController::class);
-
-Route::get('images/{name}', [UniversityController::class, 'getLogo']);
-
 Route::resource('university_branches', UniversityBranchController::class);
 Route::resource('faculties', FacultyController::class);
 Route::resource('departments', DepartmentController::class);

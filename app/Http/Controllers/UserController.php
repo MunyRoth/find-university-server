@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
 
 class UserController extends Controller
 {
+    private const PROVIDERS = [
+        'google'
+    ];
+
     /**
      * Register a new user
      */
@@ -22,7 +28,6 @@ class UserController extends Controller
             'name' =>'required|max:255',
             'password' =>'required|min:8',
             'cfPassword' =>'required|same:password',
-            'role' => 'required'
         ]);
 
         if ($validator->fails()){
@@ -35,13 +40,14 @@ class UserController extends Controller
         $req = $request->all();
 
         // Check if email is registered
-        if (User::where('email', '=', $req['email'])->exists()){
+        if (User::where('email', $req['email'])->exists()){
             return Response([
                 'status' => 200,
                 'massage' => 'your email address is already registered',
             ], 200);
         }
 
+        $req['role'] = 'user';
         $req['password'] = bcrypt($req['password']);
 
         // store to database
@@ -53,7 +59,7 @@ class UserController extends Controller
         return Response([
             'status' => 201,
             'massage' => 'register successful',
-            'token' => $user->createToken('example')->accessToken,
+            'token' => $user->createToken(env('API_AUTH_TOKEN_PASSPORT'))->accessToken,
         ], 201);
     }
 
@@ -73,17 +79,92 @@ class UserController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('example')->accessToken;
+
+        // check email verification
+        if (!$user->hasVerifiedEmail()) {
+            return Response([
+                'status' => 200,
+                'message' => 'your email is not verified',
+            ], 200);
+        }
+
         return Response([
             'status' => 200,
             'message' => 'login successful',
-            'token' => $token,
+            'token' => $user->createToken(env('API_AUTH_TOKEN_PASSPORT'))->accessToken
         ], 200);
+    }
+
+    /**
+     * Social Login
+     */
+    public function redirectToProvider($provider): Response
+    {
+        if(!in_array($provider, self::PROVIDERS)){
+            return Response([
+                'status' => 200,
+                'message' => 'incorrect provider',
+            ], 200);
+        }
+
+        return Response([
+            'status' => 200,
+            'provider_redirect' => Socialite::driver($provider)->stateless()->redirect()->getTargetUrl()
+        ], 200);
+    }
+
+    public function handleProviderCallback($provider): Response
+    {
+        if(!in_array($provider, self::PROVIDERS)){
+            return Response([
+                'status' => 200,
+                'message' => 'provider not found',
+            ], 200);
+        }
+
+        try {
+            $providerUser = Socialite::driver($provider)->stateless()->user();
+
+            $user = User::where('provider_name', $provider)
+                ->where('provider_id', $providerUser->getId())
+                ->first();
+
+            if ($user) {
+                return Response([
+                    'status' => 200,
+                    'message' => 'login successful',
+                    'token' => $user->createToken(env('API_AUTH_TOKEN_PASSPORT_SOCIAL'))->accessToken
+                ], 200);
+            }
+
+            $user = User::create([
+                'provider_name' => $provider,
+                'provider_id' => $providerUser->getId(),
+                'avatar' => $providerUser->getAvatar(),
+                'role' => 'user',
+                'name' => $providerUser->getName(),
+                'email' => $providerUser->getEmail(),
+            ]);
+
+            return Response([
+                'status' => 201,
+                'message' => 'register successful',
+                'token' => $user->createToken(env('API_AUTH_TOKEN_PASSPORT_SOCIAL'))->accessToken
+            ], 201);
+
+//                return redirect(env('CLIENT_SITE'));
+        }
+        catch (Exception $e) {
+            return Response([
+                'status' => 500,
+                'error' => $e
+            ], 500);
+        }
     }
 
     public function logout(): Response
     {
-        // check token
+        // check authorization
         if (Auth::guard('api')->check()){
             $accessToken = Auth::guard('api')->user()->token();
 
@@ -104,10 +185,9 @@ class UserController extends Controller
         ], 401);
     }
 
-
-    public function getDetail(): Response
+    public function getUser(): Response
     {
-        // check token
+        // check authorization
         if (Auth::guard('api')->check()){
             $user = Auth::guard('api')->user();
             return Response([
@@ -115,6 +195,22 @@ class UserController extends Controller
                 'massage' => 'success',
                 'data' => $user
             ],200);
+        }
+
+        return Response([
+            'status' => 401,
+            'massage' => 'unauthorized'
+        ], 401);
+    }
+
+    public function editUser(Request $request, User $user): Response
+    {
+        // check authorization
+        if (Auth::guard('api')->check()){
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully'
+            ]);
         }
 
         return Response([

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('address_km');
             $table->text('address_en')
                 ->nullable();
-            $table->string('location');
+            $table->text('location');
             $table->timestamps();
         });
     }

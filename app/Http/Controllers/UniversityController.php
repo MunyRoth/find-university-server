@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\University;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +17,7 @@ class UniversityController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $universities->with('universityType', 'universityBranches')->get()
+            'data' => $universities->with('universityType', 'universityBranches.province')->get()
         ], 200);
     }
 
@@ -31,8 +30,8 @@ class UniversityController extends Controller
         $validator = Validator::make($request->all(), [
             'university_type_id' => 'required|max:2',
             'name_km' => 'required|max:255',
-            'about_km' => 'required|max:255',
-            'logo' => 'required|image|mimes:jpeg,jpg,png|max:4095'
+            'about_km' => 'required|max:65535',
+            'logo' => 'required|image|mimes:jpeg,jpg,png|max:4095' // kilobytes
         ]);
 
         if ($validator->fails()){
@@ -80,23 +79,8 @@ class UniversityController extends Controller
     {
         return Response([
             'status' => '200',
-            'data' => $university->load('universityType', 'universityBranches', 'faculties.departments.majors.subjects')
+            'data' => $university->load('universityType', 'universityBranches.province', 'faculties.departments.majors.subjects')
         ], 200);
-    }
-    public function getLogo($name): Response
-    {
-        $path = storage_path('app/images/' . $name);
-
-        if (!File::exists($path)) {
-            return Response([
-                'status' => $path,
-            ], 404);
-        }
-
-        $file = File::get($path);
-        $type = File::mimeType($path);
-
-        return Response($file, 200)->header("Content-Type", $type);
     }
 
     /**
@@ -122,25 +106,25 @@ class UniversityController extends Controller
 
         if ($request->name_km != '') {
             $university->update([
-                'name_km' => $request->name_km,
+                'name_km' => $request->name_km
             ]);
         }
 
         if ($request->name_en != '') {
             $university->update([
-                'name_en' => $request->name_en,
+                'name_en' => $request->name_en
             ]);
         }
 
         if ($request->about_km != '') {
             $university->update([
-                'about_km' => $request->about_km,
+                'about_km' => $request->about_km
             ]);
         }
 
         if ($request->about_en != '') {
             $university->update([
-                'about_en' => $request->about_en,
+                'about_en' => $request->about_en
             ]);
         }
 
@@ -162,19 +146,19 @@ class UniversityController extends Controller
 
         if ($request->website != '') {
             $university->update([
-                'website' => $request->website,
+                'website' => $request->website
             ]);
         }
 
         if ($request->email != '') {
             $university->update([
-                'email' => $request->email,
+                'email' => $request->email
             ]);
         }
 
         if ($request->phone != '') {
             $university->update([
-                'phone' => $request->phone,
+                'phone' => $request->phone
             ]);
         }
 
