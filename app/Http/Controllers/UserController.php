@@ -68,25 +68,30 @@ class UserController extends Controller
      */
     public function login(Request $request): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'email' =>'required|email|max:255',
+            'password' =>'required|min:8',
+        ]);
+
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         $req = $request->all();
 
         // check email and password
         if (!Auth::attempt($req)) {
             return Response([
                 'status' => 403,
-                'message' => 'invalid credentials'
+                'message' => 'wrong email or password'
             ], 403);
         }
 
         $user = Auth::user();
-
-        // check email verification
-        if (!$user->hasVerifiedEmail()) {
-            return Response([
-                'status' => 200,
-                'message' => 'your email is not verified',
-            ], 200);
-        }
 
         return Response([
             'status' => 200,
@@ -190,11 +195,20 @@ class UserController extends Controller
         // check authorization
         if (Auth::guard('api')->check()){
             $user = Auth::guard('api')->user();
+
+            // check email verification
+            if ($user->hasVerifiedEmail() || $user->provider_id != '') {
+                return Response([
+                    'status' => 200,
+                    'massage' => 'success',
+                    'data' => $user
+                ],200);
+            }
+
             return Response([
                 'status' => 200,
-                'massage' => 'success',
-                'data' => $user
-            ],200);
+                'message' => 'your email is not verified',
+            ], 200);
         }
 
         return Response([
@@ -203,14 +217,46 @@ class UserController extends Controller
         ], 401);
     }
 
-    public function editUser(Request $request, User $user): Response
+    public function editUser(Request $request): Response
     {
         // check authorization
         if (Auth::guard('api')->check()){
+            $user =  Auth::guard('api')->user();
+            $userid = $user->id;
+            $userUpdate = User::where('id', $userid);
+
+            // check email verification
+            if ($user->hasVerifiedEmail() || $user->provider_id != '') {
+                if ($request->username != '') {
+                    $userUpdate->update(['username' => $request->username]);
+                }
+
+                if ($request->email != '') {
+                    $userUpdate->update(['email' => $request->email]);
+                }
+
+                if ($request->phone != '') {
+                    $userUpdate->update(['phone' => $request->phone]);
+                }
+
+                if ($request->avatar != '') {
+                    $userUpdate->update(['avatar' => $request->avatar]);
+                }
+
+                if ($request->name != '') {
+                    $userUpdate->update(['name' => $request->name]);
+                }
+
+                return Response([
+                    'status' => 200,
+                    'message' => 'updated successfully'
+                ]);
+            }
+
             return Response([
                 'status' => 200,
-                'message' => 'updated successfully'
-            ]);
+                'message' => 'your email is not verified',
+            ], 200);
         }
 
         return Response([
