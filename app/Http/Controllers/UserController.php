@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password as RulesPassword;
 use Laravel\Socialite\Facades\Socialite;
 
 class UserController extends Controller
@@ -22,8 +27,11 @@ class UserController extends Controller
      */
     public function register(Request $request): Response
     {
+        // get all from request
+        $req = $request->all();
+
         // validate the request
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($req, [
             'email' =>'required|email|max:255',
             'name' =>'required|max:255',
             'password' =>'required|min:8',
@@ -32,12 +40,10 @@ class UserController extends Controller
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => 'validation failed'
-            ], 403);
+                "status" => 400,
+                "message" => $validator->errors()->first()
+            ], 400);
         }
-
-        $req = $request->all();
 
         // Check if email is registered
         if (User::where('email', $req['email'])->exists()){
@@ -47,8 +53,9 @@ class UserController extends Controller
             ], 200);
         }
 
+        // set role and Hash password
         $req['role'] = 'user';
-        $req['password'] = bcrypt($req['password']);
+        $req['password'] = Hash::make($req['password']);
 
         // store to database
         $user = User::create($req);
@@ -68,20 +75,21 @@ class UserController extends Controller
      */
     public function login(Request $request): Response
     {
+        // get all from request
+        $req = $request->all();
+
         // validate the request
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($req, [
             'email' =>'required|email|max:255',
             'password' =>'required|min:8',
         ]);
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => 'validation failed'
-            ], 403);
+                "status" => 400,
+                "message" => $validator->errors()->first()
+            ], 400);
         }
-
-        $req = $request->all();
 
         // check email and password
         if (!Auth::attempt($req)) {
@@ -91,6 +99,7 @@ class UserController extends Controller
             ], 403);
         }
 
+        // get user from database
         $user = Auth::user();
 
         return Response([
@@ -105,6 +114,7 @@ class UserController extends Controller
      */
     public function redirectToProvider($provider): Response
     {
+        // check if provider exists
         if(!in_array($provider, self::PROVIDERS)){
             return Response([
                 'status' => 200,
@@ -120,6 +130,7 @@ class UserController extends Controller
 
     public function handleProviderCallback($provider): Response
     {
+        // check if provider exists
         if(!in_array($provider, self::PROVIDERS)){
             return Response([
                 'status' => 200,
@@ -128,8 +139,10 @@ class UserController extends Controller
         }
 
         try {
+            // get user from provider
             $providerUser = Socialite::driver($provider)->stateless()->user();
 
+            // query user from database
             $user = User::where('provider_name', $provider)
                 ->where('provider_id', $providerUser->getId())
                 ->first();
@@ -142,6 +155,7 @@ class UserController extends Controller
                 ], 200);
             }
 
+            // store user in database
             $user = User::create([
                 'provider_name' => $provider,
                 'provider_id' => $providerUser->getId(),
@@ -158,110 +172,207 @@ class UserController extends Controller
             ], 201);
 
 //                return redirect(env('CLIENT_SITE'));
-        }
-        catch (Exception $e) {
+        } catch (Exception $ex) {
             return Response([
                 'status' => 500,
-                'error' => $e
+                'error' => $ex
             ], 500);
         }
     }
 
     public function logout(): Response
     {
-        // check authorization
-        if (Auth::guard('api')->check()){
-            $accessToken = Auth::guard('api')->user()->token();
-
-            \DB::table('oauth_refresh_tokens')
-                ->where('access_token_id', $accessToken->id)
-                ->update(['revoked' => 1]);
-            $accessToken->revoke();
-
-            return Response([
-                'status' => 200,
-                'massage' => 'logout successfully'
-            ],200);
-        }
+        $user = Auth::user()->token();
+        $user->revoke();
 
         return Response([
-            'status' => 401,
-            'massage' => 'unauthorized'
-        ], 401);
+            'status' => 200,
+            'massage' => 'logout successfully'
+        ],200);
     }
 
     public function getUser(): Response
     {
-        // check authorization
-        if (Auth::guard('api')->check()){
-            $user = Auth::guard('api')->user();
+        $user = Auth::guard('api')->user();
 
-            // check email verification
-            if ($user->hasVerifiedEmail() || $user->provider_id != '') {
-                return Response([
-                    'status' => 200,
-                    'massage' => 'success',
-                    'data' => $user
-                ],200);
-            }
-
+        // check email verification
+        if ($user->hasVerifiedEmail() || $user->provider_id != '') {
             return Response([
                 'status' => 200,
-                'message' => 'your email is not verified',
-            ], 200);
+                'massage' => 'success',
+                'data' => $user
+            ],200);
         }
 
         return Response([
-            'status' => 401,
-            'massage' => 'unauthorized'
-        ], 401);
+            'status' => 200,
+            'message' => 'your email is not verified',
+        ], 200);
     }
 
     public function editUser(Request $request): Response
     {
-        // check authorization
-        if (Auth::guard('api')->check()){
-            $user =  Auth::guard('api')->user();
-            $userid = $user->id;
-            $userUpdate = User::where('id', $userid);
+        $user =  Auth::guard('api')->user();
+        $userid = $user->id;
+        $userUpdate = User::where('id', $userid);
 
-            // check email verification
-            if ($user->hasVerifiedEmail() || $user->provider_id != '') {
-                if ($request->username != '') {
-                    $userUpdate->update(['username' => $request->username]);
-                }
+        // check email verification
+        if ($user->hasVerifiedEmail() || $user->provider_id != '') {
 
-                if ($request->email != '') {
-                    $userUpdate->update(['email' => $request->email]);
-                }
+            if ($request->username != '') {
+                $userUpdate->update(['username' => $request->username]);
+            }
 
-                if ($request->phone != '') {
-                    $userUpdate->update(['phone' => $request->phone]);
-                }
+            if ($request->email != '') {
+                $userUpdate->update(['email' => $request->email]);
+            }
 
-                if ($request->avatar != '') {
-                    $userUpdate->update(['avatar' => $request->avatar]);
-                }
+            if ($request->phone != '') {
+                $userUpdate->update(['phone' => $request->phone]);
+            }
 
-                if ($request->name != '') {
-                    $userUpdate->update(['name' => $request->name]);
-                }
+            if ($request->avatar != '') {
+                $userUpdate->update(['avatar' => $request->avatar]);
+            }
 
-                return Response([
-                    'status' => 200,
-                    'message' => 'updated successfully'
-                ]);
+            if ($request->name != '') {
+                $userUpdate->update(['name' => $request->name]);
             }
 
             return Response([
                 'status' => 200,
-                'message' => 'your email is not verified',
-            ], 200);
+                'message' => 'updated successfully'
+            ]);
         }
 
         return Response([
-            'status' => 401,
-            'massage' => 'unauthorized'
-        ], 401);
+            'status' => 200,
+            'message' => 'your email is not verified',
+        ], 200);
+    }
+
+    public function changePassword(Request $request): Response
+    {
+        // get user id
+        $userid = Auth::guard('api')->user()->id;
+
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'oldPassword' => 'required',
+            'newPassword' => 'required|min:8',
+            'cfPassword' => 'required|same:newPassword'
+        ]);
+
+        if ($validator->fails()){
+            return Response([
+                "status" => 400,
+                "message" => $validator->errors()->first()
+            ], 400);
+        }
+
+        try {
+            if (!(Hash::check(request('oldPassword'), Auth::user()->password))) {
+                return Response([
+                    "status" => 400,
+                    "message" => "check your old password"
+                ], 400);
+            } else if ((Hash::check(request('newPassword'), Auth::user()->password))) {
+                return Response(["status" => 400,
+                    "message" => "please enter a password which is not similar then current password"
+                ], 400);
+            } else {
+                User::where('id', $userid)->update(['password' => Hash::make($request->newPassword)]);
+                return Response([
+                    "status" => 200,
+                    "message" => "password updated successfully."
+                ], 200);
+            }
+        } catch (Exception $ex) {
+            return Response([
+                "status" => 500,
+                "message" => $ex->errorInfo[2] ?? $ex->getMessage()
+            ], 500);
+        }
+    }
+
+    public function forgotPassword(Request $request): Response
+    {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'email' => "required|email"
+        ]);
+
+        if ($validator->fails()){
+            return Response([
+                "status" => 400,
+                "message" => $validator->errors()->first()
+            ], 400);
+        }
+
+        try {
+            $response = Password::sendResetLink($request->only('email'));
+
+            return match ($response) {
+                Password::RESET_LINK_SENT => Response([
+                    "status" => 200,
+                    "message" => trans($response)
+                ], 200),
+                Password::INVALID_USER => Response([
+                    "status" => 400,
+                    "message" => trans($response)
+                ], 400),
+                default => Response([
+                    "status" => 200,
+                    "message" => 'success'
+                ], 200),
+            };
+
+        } catch (\Swift_TransportException|Exception $ex) {
+            return Response([
+                "status" => 500,
+                "message" => $ex->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function resetPassword(Request $request): Response
+    {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => ['required', 'confirmed', RulesPassword::defaults()],
+        ]);
+
+        if ($validator->fails()){
+            return Response([
+                "status" => 400,
+                "message" => $validator->errors()->first()
+            ], 400);
+        }
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'cfPassword', 'token'),
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                $user->tokens()->delete();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status == Password::PASSWORD_RESET) {
+            return Response([
+                'message'=> 'password reset successfully'
+            ]);
+        }
+
+        return Response([
+            'message'=> __($status)
+        ], 500);
     }
 }

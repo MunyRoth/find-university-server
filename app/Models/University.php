@@ -34,6 +34,6 @@ class University extends Model
 
     public function faculties(): HasMany
     {
-        return $this->hasMany(faculty::class);
+        return $this->hasMany(Faculty::class);
     }
 }

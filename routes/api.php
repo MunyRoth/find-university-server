@@ -42,11 +42,14 @@ Route::middleware('auth:api')->group(function () {
     Route::get('logout', [UserController::class, 'logout']);
     Route::get('user', [UserController::class, 'getUser']);
     Route::put('user', [UserController::class, 'editUser']);
-
+    Route::post('change_password', [UserController::class, 'changePassword']);
     Route::resource('comment', CommentController::class);
     Route::resource('rate', RateController::class);
 });
 
+// Forgot password
+Route::post('forgot_password', [UserController::class, 'forgotPassword']);
+Route::post('reset_password', [UserController::class, 'resetPassword']);
 // Verify email
 Route::get('email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
 
