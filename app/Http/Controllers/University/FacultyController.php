@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\University;
 
-use App\Models\Major;
+use App\Http\Controllers\Controller;
+use App\Models\Faculty;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class MajorController extends Controller
+class FacultyController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Major $major): Response
+    public function index(Faculty $faculty): Response
     {
         return Response([
             'status' => 200,
-            'data' => $major->with('department')->get()
+            'data' => $faculty->with('university')->get()
         ], 200);
     }
 
@@ -30,14 +31,12 @@ class MajorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Major  $major): Response
+    public function store(Request $request, Faculty  $faculty): Response
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'department_id' => 'required|max:127',
-            'major_type_id' => 'required|max:127',
-            'name_km' => 'required|max:127',
-            'num_semesters' => 'required|max:2'
+            'university_id' => 'required|max:127',
+            'name_km' => 'required|max:127'
         ]);
 
         if ($validator->fails()){
@@ -46,7 +45,8 @@ class MajorController extends Controller
                 'massage' => 'validation failed'
             ], 403);
         }
-        $major->create($request->all());
+
+        $faculty->create($request->all());
 
         return Response([
             'status' => 201,
@@ -57,47 +57,46 @@ class MajorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Major $major): Response
+    public function show(Faculty $faculty): Response
     {
         return Response([
             'status' => '200',
-            'data' => $major
+            'data' => $faculty
         ], 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Major $major): Response
+    public function edit(Faculty $faculty): Response
     {
         return Response([
             'status' => '200',
-            'data' => $major
+            'data' => $faculty
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Major $major): Response
+    public function update(Request $request, Faculty  $faculty): Response
     {
-        $major->major_type_id = $request->major_type_id;
-        $major->name_km = $request->name_km;
-        $major->name_en = $request->name_en;
-        $major->save();
+        $faculty->name_km = $request->name_km;
+        $faculty->name_en = $request->name_en;
+        $faculty->save();
 
         return Response([
             'status' => 200,
-            'data' => $major
+            'data' => $faculty
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Major $major): Response
+    public function destroy(Faculty $faculty): Response
     {
-        $major->delete();
+        $faculty->delete();
 
         return Response([
             'status' => 200,

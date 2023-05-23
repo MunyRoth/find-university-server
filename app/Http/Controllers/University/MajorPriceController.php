@@ -1,40 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\University;
 
-use App\Models\Department;
+use App\Http\Controllers\Controller;
+use App\Models\MajorPrice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentController extends Controller
+class MajorPriceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Department $department): Response
+    public function index(MajorPrice $majorPrice): Response
     {
         return Response([
             'status' => 200,
-            'data' => $department->with('faculty')->get()
+            'data' => $majorPrice->with('major')->get()
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Department  $department): Response
+    public function store(Request $request, MajorPrice  $majorPrice): Response
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'faculty_id' => 'required|max:127',
             'name_km' => 'required|max:127'
         ]);
 
@@ -45,7 +38,7 @@ class DepartmentController extends Controller
             ], 403);
         }
 
-        $department->create($request->all());
+        $majorPrice->create($request->all());
 
         return Response([
             'status' => 201,
@@ -56,46 +49,35 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department): Response
+    public function show(MajorPrice $majorPrice): Response
     {
         return Response([
             'status' => '200',
-            'data' => $department
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Department $department): Response
-    {
-        return Response([
-            'status' => '200',
-            'data' => $department
+            'data' => $majorPrice
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department): Response
+    public function update(Request $request, MajorPrice $majorPrice): Response
     {
-        $department->name_km = $request->name_km;
-        $department->name_en = $request->name_en;
-        $department->save();
+        $majorPrice->major_id = $request->major_id;
+        $majorPrice->price_usd = $request->price_usd;
+        $majorPrice->save();
 
         return Response([
             'status' => 200,
-            'data' => $department
+            'data' => $majorPrice
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department): Response
+    public function destroy(MajorPrice $majorPrice): Response
     {
-        $department->delete();
+        $majorPrice->delete();
 
         return Response([
             'status' => 200,

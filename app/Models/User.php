@@ -24,7 +24,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'provider_id',
         'provider_name',
-        'role',
         'avatar',
         'name',
         'password'
@@ -49,9 +48,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Send a password reset notification to the user.
+     *
+     * @param  string  $token
+     */
     public function sendPasswordResetNotification($token): void
     {
-        $url = 'http://127.0.0.1:8000/reset_password?token='.$token;
+        $url = env('FRONT_URL').'/password/reset?token='.$token;
 
         $this->notify(new ResetPasswordNotification($url));
     }

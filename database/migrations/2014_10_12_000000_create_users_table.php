@@ -27,7 +27,8 @@ return new class extends Migration
                 ->nullable();
             $table->string('avatar')
                 ->nullable();
-            $table->string('role');
+            $table->string('role', 15)
+                ->default(config('settings.default_role'));
             $table->string('name');
             $table->timestamp('email_verified_at')
                 ->nullable();

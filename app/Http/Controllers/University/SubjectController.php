@@ -1,33 +1,37 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\University;
 
-use App\Models\MajorPrice;
+use App\Http\Controllers\Controller;
+use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class MajorPriceController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(MajorPrice $majorPrice): Response
+    public function index(Subject $subject): Response
     {
         return Response([
             'status' => 200,
-            'data' => $majorPrice->with('major')->get()
+            'data' => $subject->get()
         ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, MajorPrice  $majorPrice): Response
+    public function store(Request $request, Subject  $subject): Response
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'name_km' => 'required|max:127'
+            'major_id' => 'required|max:127',
+            'year_id' => 'required|max:2',
+            'semester_id' => 'required|max:2',
+            'name_km' => 'required|max:63'
         ]);
 
         if ($validator->fails()){
@@ -37,7 +41,7 @@ class MajorPriceController extends Controller
             ], 403);
         }
 
-        $majorPrice->create($request->all());
+        $subject->create($request->all());
 
         return Response([
             'status' => 201,
@@ -48,35 +52,35 @@ class MajorPriceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MajorPrice $majorPrice): Response
+    public function show(Subject $subject): Response
     {
         return Response([
             'status' => '200',
-            'data' => $majorPrice
+            'data' => $subject
         ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MajorPrice $majorPrice): Response
+    public function update(Request $request, Subject $subject): Response
     {
-        $majorPrice->major_id = $request->major_id;
-        $majorPrice->price_usd = $request->price_usd;
-        $majorPrice->save();
+        $subject->name_km = $request->name_km;
+        $subject->name_en = $request->name_en;
+        $subject->save();
 
         return Response([
             'status' => 200,
-            'data' => $majorPrice
+            'data' => $subject
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MajorPrice $majorPrice): Response
+    public function destroy(Subject $subject): Response
     {
-        $majorPrice->delete();
+        $subject->delete();
 
         return Response([
             'status' => 200,
