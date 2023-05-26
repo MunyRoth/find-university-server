@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class PasswordController extends Controller
 {
@@ -25,7 +24,7 @@ class PasswordController extends Controller
         // validate the request
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
-            'password' => ['required', 'confirmed', RulesPassword::defaults()]
+            'password' => 'required|min:8|confirmed'
         ]);
 
         if ($validator->fails()){
@@ -106,7 +105,7 @@ class PasswordController extends Controller
         $validator = Validator::make($request->all(), [
             'token' => 'required',
             'email' => 'required|email|max:255',
-            'password' => ['required', 'confirmed', RulesPassword::defaults()]
+            'password' => 'required|min:8|confirmed'
         ]);
 
         if ($validator->fails()){

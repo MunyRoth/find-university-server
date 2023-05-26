@@ -12,7 +12,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password as RulesPassword;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -36,7 +35,7 @@ class AuthController extends Controller
         $validator = Validator::make($req, [
             'name' =>'required|max:255',
             'email' => 'required|email|max:255',
-            'password' => ['required', 'confirmed', RulesPassword::defaults()]
+            'password' => 'required|min:8|confirmed'
         ]);
 
         if ($validator->fails()){
@@ -84,7 +83,7 @@ class AuthController extends Controller
         // validate the request
         $validator = Validator::make($req, [
             'email' => 'required|email|max:255',
-            'password' => ['required', RulesPassword::defaults()]
+            'password' => 'required|min:8'
         ]);
 
         if ($validator->fails()){
@@ -119,7 +118,8 @@ class AuthController extends Controller
      */
     public function logout(): Response
     {
-        Auth::logout();
+        $user = Auth::user()->token();
+        $user->revoke();
 
         return Response([
             'status' => 200,
