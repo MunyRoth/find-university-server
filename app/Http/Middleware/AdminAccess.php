@@ -4,8 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
+use \Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminAccess
@@ -13,12 +12,19 @@ class AdminAccess
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Request $request
+     * @param \Closure(Request): (Response) $next
+     * @return Response
      */
-    public function handle(Request $request, Closure $next, $redirectToRoute = null): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user->role !== config('settings.roles.admin')) {
-            return Redirect::guest(URL::route($redirectToRoute ?: 'verification.notice'));
+        $user = Auth::guard('api')->user();
+
+        if (!$user || ($user->role !== config('settings.roles.admin'))) {
+            return Response([
+                'status' => 403,
+                'message' => 'you are not allowed to access this.'
+            ], 403);
         }
 
         return $next($request);
