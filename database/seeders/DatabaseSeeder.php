@@ -50,8 +50,8 @@ class DatabaseSeeder extends Seeder
             ]);
 
         UniversityType::insert([
-            ['name_km' => 'រដ្ឋ', 'name_en' => 'Public'],
-            ['name_km' => 'ឯកជន', 'name_en' => 'Private'],
+            ['type_km' => 'រដ្ឋ', 'type_en' => 'Public'],
+            ['type_km' => 'ឯកជន', 'type_en' => 'Private'],
         ]);
     }
 }
