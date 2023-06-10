@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
@@ -48,5 +48,10 @@ class DatabaseSeeder extends Seeder
             ['name_km' => 'ស្វាយរៀង', 'name_en' => 'Svay Rieng'],
             ['name_km' => 'ឧត្តរមានជ័យ', 'name_en' => 'Oddar Meanchey']
             ]);
+
+        UniversityType::insert([
+            ['name_km' => 'រដ្ឋ', 'name_en' => 'Public'],
+            ['name_km' => 'ឯកជន', 'name_en' => 'Private'],
+        ]);
     }
 }
