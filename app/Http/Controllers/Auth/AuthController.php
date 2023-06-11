@@ -48,9 +48,9 @@ class AuthController extends Controller
         // Check if email is registered
         if (User::where('email', $req['email'])->exists()){
             return Response([
-                'status' => 200,
+                'status' => 409,
                 'massage' => 'your email address is already registered',
-            ], 200);
+            ], 409);
         }
 
         // set Hash password

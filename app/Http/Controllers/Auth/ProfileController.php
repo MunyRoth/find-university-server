@@ -24,9 +24,9 @@ class ProfileController extends Controller
         }
 
         return Response([
-            'status' => 200,
+            'status' => 403,
             'message' => 'your email is not verified',
-        ], 200);
+        ], 403);
     }
 
     public function updateProfile(Request $request): Response
@@ -65,8 +65,8 @@ class ProfileController extends Controller
         }
 
         return Response([
-            'status' => 200,
+            'status' => 403,
             'message' => 'your email is not verified',
-        ], 200);
+        ], 403);
     }
 }
