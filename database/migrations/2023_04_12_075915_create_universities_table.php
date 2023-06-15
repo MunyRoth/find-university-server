@@ -30,8 +30,6 @@ return new class extends Migration
                 ->nullable();
             $table->string('phone', 63)
                 ->nullable();
-            $table->string('images')
-                ->nullable();
             $table->timestamps();
         });
     }

@@ -16,12 +16,8 @@ return new class extends Migration
             $table->foreignid('major_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->foreignid('year_id')
-                ->constrained()
-                ->onDelete('cascade');
-            $table->foreignid('semester_id')
-                ->constrained()
-                ->onDelete('cascade');
+            $table->string('year', 2);
+            $table->string('semester', 2);
             $table->string('name_km');
             $table->string('name_en')
                 ->nullable();

@@ -27,6 +27,11 @@ class University extends Model
         return $this->belongsTo(UniversityType::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class);
+    }
+
     public function universityBranches(): HasMany
     {
         return $this->hasMany(UniversityBranch::class);

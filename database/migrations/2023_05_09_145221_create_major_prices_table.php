@@ -17,6 +17,8 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->string('price_usd', 15);
+            $table->string('price_khr', 15)
+                ->nullable();
             $table->timestamps();
         });
     }
