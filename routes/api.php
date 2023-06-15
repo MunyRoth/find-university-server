@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RateController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\MajorRecommendationController;
 use App\Http\Controllers\MajorTypeController;
 use App\Http\Controllers\University\DepartmentController;
 use App\Http\Controllers\University\FacultyController;
@@ -139,3 +140,6 @@ Route::middleware('admin')->group(function () {
         Route::delete('/subjects/{id}', 'destroy');
     });
 });
+
+
+Route::get('major_recommendation', [MajorRecommendationController::class, 'index']);
