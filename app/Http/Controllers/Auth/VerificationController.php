@@ -15,15 +15,15 @@ class VerificationController extends Controller
     {
         $user = User::find($request->route('id'));
 
-        if ($user->hasVerifiedEmail()) {
-            return redirect(env('FRONT_URL') . '/email/verify/already-success');
-        }
+//        if ($user->hasVerifiedEmail()) {
+//            return redirect(env('FRONT_URL') . '/alreadySuccess');
+//        }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return redirect(env('FRONT_URL') . '/email/verify/success');
+        return redirect(env('FRONT_URL') . '/verifySuccess');
     }
 
     public function resendEmail(Request $request): Response

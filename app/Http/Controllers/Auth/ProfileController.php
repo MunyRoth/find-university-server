@@ -26,6 +26,7 @@ class ProfileController extends Controller
         return Response([
             'status' => 403,
             'message' => 'your email is not verified',
+            'email' => $user->email
         ], 403);
     }
 
