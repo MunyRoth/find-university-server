@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class VerificationController extends Controller
 {
@@ -25,10 +26,14 @@ class VerificationController extends Controller
         return redirect(env('FRONT_URL') . '/email/verify/success');
     }
 
-    public function resendEmail(Request $request): RedirectResponse
+    public function resendEmail(Request $request): Response
     {
         $request->user()->sendEmailVerificationNotification();
 
-        return redirect(env('FRONT_URL') . '/email/verify/sent');
+        return Response([
+            'status' => 200,
+            'message' => 'already resend email'
+        ], 200);
+//        return redirect(env('FRONT_URL') . '/email/verify/sent');
     }
 }
