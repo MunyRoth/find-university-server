@@ -17,7 +17,8 @@ use Laravel\Socialite\Facades\Socialite;
 class AuthController extends Controller
 {
     private const PROVIDERS = [
-        'google'
+        'google',
+        'facebook'
     ];
 
     /**
