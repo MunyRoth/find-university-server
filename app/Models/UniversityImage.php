@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Semester extends Model
+class UniversityImage extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'semester'
+        'university_id',
+        'image'
     ];
+
+    use HasFactory;
 }

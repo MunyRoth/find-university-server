@@ -26,7 +26,17 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'dr.munyroth@gmail.com',
+            'role' => 'admin',
+            'email_verified_at' => date(today()),
             'password' => bcrypt('admin@143272')
+        ]);
+
+        User::create([
+            'name' => 'Admin',
+            'email' => 'munyroth@gmail.com',
+            'role' => 'user',
+            'email_verified_at' => date(today()),
+            'password' => bcrypt('user@1234')
         ]);
 
         Province::insert([

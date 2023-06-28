@@ -14,6 +14,7 @@ use App\Http\Controllers\University\MajorController;
 use App\Http\Controllers\University\SubjectController;
 use App\Http\Controllers\University\UniversityBranchController;
 use App\Http\Controllers\University\UniversityController;
+use App\Http\Controllers\University\UniversityImageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,6 +55,11 @@ Route::middleware('guest')->group(function () {
         Route::get('/universities/{id}', 'show');
     });
 
+    Route::controller(UniversityImageController::class)->group(function () {
+        Route::get('/university_images', 'index');
+        Route::get('/university_images/{id}', 'show');
+    });
+
     Route::controller(UniversityBranchController::class)->group(function () {
         Route::get('/university_branches', 'index');
         Route::get('/university_branches/{id}', 'show');
@@ -78,6 +84,8 @@ Route::middleware('guest')->group(function () {
         Route::get('/subjects', 'index');
         Route::get('/subjects/{id}', 'show');
     });
+
+    Route::post('major_recommendation', [MajorRecommendationController::class, 'index']);
 });
 
 Route::middleware('auth:api')->group(function () {
@@ -93,53 +101,56 @@ Route::middleware('auth:api')->group(function () {
 
     Route::resource('comment', CommentController::class);
     Route::resource('rate', RateController::class);
+
+    Route::middleware('admin')->group(function () {
+        // Major
+        Route::controller(MajorTypeController::class)->group(function () {
+            Route::post('/major_types', 'store');
+            Route::put('/major_types/{id}', 'update');
+            Route::delete('/major_types/{id}', 'destroy');
+        });
+
+        // Universities
+        Route::controller(UniversityController::class)->group(function () {
+            Route::post('/universities', 'store');
+            Route::put('/universities/{id}', 'update');
+            Route::delete('/universities/{id}', 'destroy');
+        });
+
+        Route::controller(UniversityImageController::class)->group(function () {
+            Route::post('/university_images', 'store');
+            Route::put('/university_images/{id}', 'update');
+            Route::delete('/university_images/{id}', 'destroy');
+        });
+
+        Route::controller(UniversityBranchController::class)->group(function () {
+            Route::post('/university_branches', 'store');
+            Route::put('/university_branches/id', 'update');
+            Route::delete('/university_branches/id', 'destroy');
+        });
+
+        Route::controller(FacultyController::class)->group(function () {
+            Route::post('/faculties', 'store');
+            Route::put('/faculties/{id}', 'update');
+            Route::delete('/faculties/{id}', 'destroy');
+        });
+
+        Route::controller(DepartmentController::class)->group(function () {
+            Route::post('/departments', 'store');
+            Route::put('/departments/{id}', 'update');
+            Route::delete('/departments/{id}', 'destroy');
+        });
+
+        Route::controller(MajorController::class)->group(function () {
+            Route::post('/majors', 'store');
+            Route::put('/majors/{id}', 'update');
+            Route::delete('/majors/{id}', 'destroy');
+        });
+
+        Route::controller(SubjectController::class)->group(function () {
+            Route::post('/subjects', 'store');
+            Route::put('/subjects/{id}', 'update');
+            Route::delete('/subjects/{id}', 'destroy');
+        });
+    });
 });
-
-Route::middleware('admin')->group(function () {
-    // Major
-    Route::controller(MajorTypeController::class)->group(function () {
-        Route::post('/major_types', 'store');
-        Route::put('/major_types/{id}', 'update');
-        Route::delete('/major_types/{id}', 'destroy');
-    });
-
-    // Universities
-    Route::controller(UniversityController::class)->group(function () {
-        Route::post('/universities', 'store');
-        Route::put('/universities/{id}', 'update');
-        Route::delete('/universities/{id}', 'destroy');
-    });
-
-    Route::controller(UniversityBranchController::class)->group(function () {
-        Route::post('/university_branches', 'store');
-        Route::put('/university_branches/id', 'update');
-        Route::delete('/university_branches/id', 'destroy');
-    });
-
-    Route::controller(FacultyController::class)->group(function () {
-        Route::post('/faculties', 'store');
-        Route::put('/faculties/{id}', 'update');
-        Route::delete('/faculties/{id}', 'destroy');
-    });
-
-    Route::controller(DepartmentController::class)->group(function () {
-        Route::post('/departments', 'store');
-        Route::put('/departments/{id}', 'update');
-        Route::delete('/departments/{id}', 'destroy');
-    });
-
-    Route::controller(MajorController::class)->group(function () {
-        Route::post('/majors', 'store');
-        Route::put('/majors/{id}', 'update');
-        Route::delete('/majors/{id}', 'destroy');
-    });
-
-    Route::controller(SubjectController::class)->group(function () {
-        Route::post('/subjects', 'store');
-        Route::put('/subjects/{id}', 'update');
-        Route::delete('/subjects/{id}', 'destroy');
-    });
-});
-
-
-Route::get('major_recommendation', [MajorRecommendationController::class, 'index']);

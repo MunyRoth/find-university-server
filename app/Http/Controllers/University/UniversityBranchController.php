@@ -76,7 +76,6 @@ class UniversityBranchController extends Controller
      */
     public function update(Request $request, UniversityBranch $branch): Response
     {
-        $branch->university_id = $request->university_id;
         $branch->province_id = $request->province_id;
         $branch->address_km = $request->address_km;
         $branch->address_en = $request->address_en;

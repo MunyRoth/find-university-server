@@ -29,7 +29,7 @@ class University extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(UniversityImage::class);
     }
 
     public function universityBranches(): HasMany

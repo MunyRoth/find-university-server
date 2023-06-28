@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class MajorRecommendationController extends Controller
 {
@@ -17,9 +18,9 @@ class MajorRecommendationController extends Controller
         $bLength = 0;
 
         foreach ($a as $key => $value) {
-            $dotProduct += $value * $b[$key];
-            $aLength += $value * $value;
-            $bLength += $b[$key] * $b[$key];
+            $dotProduct += $value['value'] * $b[$key]['value'];
+            $aLength += $value['value'] * $value['value'];
+            $bLength += $b[$key]['value'] * $b[$key]['value'];
         }
 
         return $dotProduct / (sqrt($aLength) * sqrt($bLength));
@@ -27,19 +28,150 @@ class MajorRecommendationController extends Controller
 
     function index(Request $request): Response
     {
+        // validate the request
+        $validator = Validator::make($request->all(), [
+            'khmer' => 'required|max:2',
+            'maths' => 'required|max:2',
+            'physic' => 'required|max:2',
+            'chemistry' => 'required|max:2',
+            'biology' => 'required|max:2',
+            'earth' => 'required|max:2',
+            'history' => 'required|max:2',
+            'geography' => 'required|max:2',
+            'morality' => 'required|max:2',
+        ]);
+
+        if ($validator->fails()){
+            return Response([
+                'status' => 403,
+                'massage' => 'validation failed'
+            ], 403);
+        }
+
         // Collect data
         $items = [
             [
-                'title' => 'IT',
-                'subject' => [  1, 1, 1, 0, 0, 0, 0, 0 ]
+                'major' => 'IT',
+                'subjects' => [
+                    [
+                        'subject' => 'khmer',
+                        'value' => 1
+                    ],
+                    [
+                        'name' => 'maths',
+                        'value' => 1
+                    ],
+                    [
+                        'subject' => 'physic',
+                        'value' => 1
+                    ],
+                    [
+                        'subject' => 'chemistry',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'biology',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'earth',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'history',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'geography',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'morality',
+                        'value' => 0
+                    ],
+                ]
             ],
             [
-                'title' => 'Arts',
-                'subject' => [ 0, 0, 0, 1, 1, 1, 0, 0 ]
+                'major' => 'Arts',
+                'subjects' => [
+                    [
+                        'subject' => 'khmer',
+                        'value' => 0
+                    ],
+                    [
+                        'name' => 'maths',
+                        'value' => 1
+                    ],
+                    [
+                        'subject' => 'physic',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'chemistry',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'biology',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'earth',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'history',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'geography',
+                        'value' => 1
+                    ],
+                    [
+                        'subject' => 'morality',
+                        'value' => 1
+                    ],
+                ]
             ],
             [
-                'title' => 'History',
-                'subject' => [ 0, 0, 0, 0, 0, 1, 1, 1 ]
+                'major' => 'History',
+                'subjects' => [
+                    [
+                        'subject' => 'khmer',
+                        'value' => 1
+                    ],
+                    [
+                        'name' => 'maths',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'physic',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'chemistry',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'biology',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'earth',
+                        'value' => 0
+                    ],
+                    [
+                        'subject' => 'history',
+                        'value' => 1
+                    ],
+                    [
+                        'subject' => 'geography',
+                        'value' => 1
+                    ],
+                    [
+                        'subject' => 'morality',
+                        'value' => 0
+                    ],
+                ]
             ],
         ];
 
@@ -47,26 +179,63 @@ class MajorRecommendationController extends Controller
         $featureVectors = [];
         foreach ($items as $item) {
             $featureVectors[] = [
-                'title' => $item['title'],
-                'subject' => $item['subject'],
+                'major' => $item['major'],
+                'subjects' => $item['subjects'],
             ];
         }
 
         // Make recommendations
-        $subject = [ 4, 6, 4, 5, 3, 2, 3, 3];
+        $subjects = [
+            [
+                'subject' => 'khmer',
+                'value' => $request->khmer
+            ],
+            [
+                'name' => 'maths',
+                'value' => $request->maths
+            ],
+            [
+                'subject' => 'physic',
+                'value' => $request->physic
+            ],
+            [
+                'subject' => 'chemisty',
+                'value' => $request->chemistry
+            ],
+            [
+                'subject' => 'biology',
+                'value' => $request->biology
+            ],
+            [
+                'subject' => 'earth',
+                'value' => $request->earth
+            ],
+            [
+                'subject' => 'history',
+                'value' => $request->history
+            ],
+            [
+                'subject' => 'geography',
+                'value' => $request->geography
+            ],
+            [
+                'subject' => 'morality',
+                'value' => $request->morality
+            ],
+        ];
 
         // Calculate the similarity between items
         $similarities = [];
         foreach ($featureVectors as $featureVectorA) {
-            $similarity = $this->cosine_similarity($featureVectorA['subject'], $subject);
-            $similarities[$featureVectorA['title']] = $similarity;
+            $similarity = $this->cosine_similarity($featureVectorA['subjects'], $subjects);
+            $similarities[$featureVectorA['major']] = $similarity;
         }
 
         // Get recommendations for the user
         $recommendations = [];
         foreach ($similarities as $itemTitle => $similarity) {
             $recommendations[] = [
-                'title' => $itemTitle,
+                'major' => $itemTitle,
                 'similarity' => $similarity,
             ];
         }

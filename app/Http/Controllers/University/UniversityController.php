@@ -18,7 +18,7 @@ class UniversityController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $universities->with('universityType', 'universityBranches.province')->get()
+            'data' => $universities->with('universityType', 'universityBranches.province', 'images')->get()
         ], 200);
     }
 
@@ -46,12 +46,6 @@ class UniversityController extends Controller
             'folder' => 'find_university'
         ])->getSecurePath();
 
-        $imageUrl = null;
-        if (!empty($request->file('image')))
-        {
-            $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
-        }
-
         $university->university_type_id = $request->university_type_id;
         $university->logo = $logoUrl;
         $university->name_km = $request->name_km;
@@ -61,7 +55,6 @@ class UniversityController extends Controller
         $university->website = $request->website;
         $university->email = $request->email;
         $university->phone = $request->phone;
-        $university->images = $imageUrl;
         $university->save();
 
         return Response([
@@ -85,7 +78,7 @@ class UniversityController extends Controller
         }
         return Response([
             'status' => 404,
-            'message' => 'no results'
+            'message' => 'not found'
         ], 404);
     }
 
@@ -140,26 +133,6 @@ class UniversityController extends Controller
                 ]);
             }
 
-            // update image
-            if (!empty($request->image))
-            {
-                $imageUrl = $university->logo;
-                if (preg_match("/\/v(\d+)\/(\w+)\/(\w+)/",$imageUrl,$recordMatch)) {
-                    $id = $recordMatch[2].'/'.$recordMatch[3];
-                    Cloudinary::destroy($id);
-                }
-
-                //upload new file
-                $imageUrl = Cloudinary::upload($request->file('image')->getRealPath(), [
-                    'folder' => 'find_university'
-                ])->getSecurePath();
-
-                //update in table
-                $university->update([
-                    'images' => $imageUrl
-                ]);
-            }
-
             if ($request->website != '') {
                 $university->update([
                     'website' => $request->website
@@ -204,13 +177,6 @@ class UniversityController extends Controller
             $id = $recordMatch[2].'/'.$recordMatch[3];
             Cloudinary::destroy($id);
 
-            // delete image
-            $imageUrl = $university->images;
-            if(preg_match("/\/v(\d+)\/(\w+)\/(\w+)/",$imageUrl,$recordMatch)){
-                $id = $recordMatch[2].'/'.$recordMatch[3];
-                Cloudinary::destroy($id);
-            }
-
             $university->delete();
 
             return Response([
@@ -221,7 +187,7 @@ class UniversityController extends Controller
 
         return Response([
             'status' => 404,
-            'message' => 'no university'
+            'message' => 'not found'
         ], 404);
     }
 }
