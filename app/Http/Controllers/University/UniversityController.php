@@ -32,7 +32,7 @@ class UniversityController extends Controller
             'university_type_id' => 'required|max:2',
             'name_km' => 'required|max:255',
             'about_km' => 'required|max:65535',
-            'logo' => 'required|image|mimes:jpeg,jpg,png|max:4095' // kilobytes
+            'logo' => 'required|image|mimes:jpeg,jpg,png|max:8095' // kilobytes
         ]);
 
         if ($validator->fails()){
@@ -73,7 +73,7 @@ class UniversityController extends Controller
         if ($university) {
             return Response([
                 'status' => 200,
-                'data' => $university->load('universityType', 'universityBranches.province', 'faculties.departments.majors.subjects')
+                'data' => $university->load('universityType', 'universityBranches.province', 'faculties.departments.majors.subjects', 'images')
             ], 200);
         }
         return Response([

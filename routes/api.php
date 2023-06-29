@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RateController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\MajorRecommendationController;
 use App\Http\Controllers\MajorTypeController;
+use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\University\DepartmentController;
 use App\Http\Controllers\University\FacultyController;
 use App\Http\Controllers\University\MajorController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\University\SubjectController;
 use App\Http\Controllers\University\UniversityBranchController;
 use App\Http\Controllers\University\UniversityController;
 use App\Http\Controllers\University\UniversityImageController;
+use App\Http\Controllers\University\UniversityTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,6 +49,15 @@ Route::middleware('guest')->group(function () {
     Route::controller(MajorTypeController::class)->group(function () {
         Route::get('/major_types', 'index');
         Route::get('/major_types/{id}', 'show');
+    });
+
+    // City and Provinces
+    Route::controller(ProvinceController::class)->group(function () {
+        Route::get('/provinces', 'index');
+    });
+
+    Route::controller(UniversityTypeController::class)->group(function () {
+        Route::get('/university_types', 'index');
     });
 
     // Universities

@@ -23,7 +23,7 @@ class VerificationController extends Controller
             event(new Verified($user));
         }
 
-        return redirect(env('FRONT_URL') . '/verifySuccess');
+        return redirect(env('FRONT_URL') . '/');
     }
 
     public function resendEmail(Request $request): Response
@@ -34,6 +34,5 @@ class VerificationController extends Controller
             'status' => 200,
             'message' => 'already resend email'
         ], 200);
-//        return redirect(env('FRONT_URL') . '/email/verify/sent');
     }
 }
