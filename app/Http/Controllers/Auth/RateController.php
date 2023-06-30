@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rate;
+use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,17 +23,6 @@ class RateController extends Controller
         // check email verification
         if ($user->hasVerifiedEmail() || $user->provider_id != '') {
 
-            if (Rate::where('user_id', $user->id)
-                ->where('university_id', $request->university_id)
-                ->exists()) {
-
-                return Response([
-                    'status' => 200,
-                    'massage' => 'false',
-                ], 200);
-            }
-
-
             // get all from request
             $req = $request->all();
 
@@ -42,11 +32,34 @@ class RateController extends Controller
                 'rate' => 'required'
             ]);
 
-            if ($validator->fails()){
+            if ($validator->fails()) {
                 return Response([
                     "status" => 400,
                     "message" => $validator->errors()->first()
                 ], 400);
+            }
+
+            if (!University::where('id', $request->university_id)->exists()) {
+                return Response([
+                    'status' => 404,
+                    'message' => 'not found'
+                ], 404);
+            }
+
+            $isExists = Rate::where('user_id', $user->id)
+                ->where('university_id', $request->university_id)
+                ->first();
+
+            if ($isExists) {
+
+                $isExists->update([
+                    'rate' => $request->rate
+                ]);
+
+                return Response([
+                    'status' => 200,
+                    'massage' => 'updated successfully',
+                ], 200);
             }
 
             $rate->user_id = $user->id;
@@ -56,7 +69,7 @@ class RateController extends Controller
 
             return Response([
                 'status' => 201,
-                'massage' => 'success',
+                'massage' => 'rated successfully',
             ], 201);
         }
 
@@ -135,7 +148,11 @@ class RateController extends Controller
      */
     public function destroy(string $id): Response
     {
-        $rate = Rate::where('id', $id)->first();
+        $user = Auth::guard('api')->user();
+
+        $rate = Rate::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
 
         if ($rate) {
             $rate->delete();

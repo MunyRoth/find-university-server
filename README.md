@@ -27,7 +27,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 ### Run terminal
 ```bash
 php artisan key:generate
-php artisan migrate
+php artisan migrate --seed
 php artisan passport:install
 php artisan serve
 ```

@@ -18,6 +18,7 @@ class UniversityController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $universities->with('universityType', 'universityBranches.province', 'images')->get()
         ], 200);
     }
@@ -73,6 +74,7 @@ class UniversityController extends Controller
         if ($university) {
             return Response([
                 'status' => 200,
+                'message' => 'got successfully',
                 'data' => $university->load('universityType', 'universityBranches.province', 'faculties.departments.majors.subjects', 'images')
             ], 200);
         }

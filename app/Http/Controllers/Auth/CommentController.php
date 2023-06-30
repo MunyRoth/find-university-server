@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,11 +32,18 @@ class CommentController extends Controller
                 'comment' => 'required'
             ]);
 
-            if ($validator->fails()){
+            if ($validator->fails()) {
                 return Response([
                     "status" => 400,
                     "message" => $validator->errors()->first()
                 ], 400);
+            }
+
+            if (!University::where('id', $request->university_id)->exists()) {
+                return Response([
+                    'status' => 404,
+                    'message' => 'not found'
+                ], 404);
             }
 
             $comment->user_id = $user->id;
@@ -45,7 +53,7 @@ class CommentController extends Controller
 
             return Response([
                 'status' => 201,
-                'massage' => 'success',
+                'message' => 'commented successfully',
             ], 201);
         }
 
@@ -69,7 +77,7 @@ class CommentController extends Controller
 
         return Response([
             'status' => 200,
-            'massage' => 'success',
+            'message' => 'got successfully',
             'data' => $comments
         ], 200);
     }
@@ -83,7 +91,7 @@ class CommentController extends Controller
 
         return Response([
             'status' => 200,
-            'massage' => 'success',
+            'message' => 'got successfully',
             'data' => $comments
         ], 200);
     }
@@ -106,7 +114,7 @@ class CommentController extends Controller
 
         return Response([
             'status' => 200,
-            'massage' => 'success',
+            'message' => 'got successfully',
             'data' => $data
         ], 200);
     }
@@ -114,9 +122,29 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): Response
     {
-        //
+        $user = Auth::guard('api')->user();
+
+        $comment = Comment::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($comment) {
+            $comment->update([
+                'comment' => $request->comment
+            ]);
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+            ], 200);
+        }
+
+        return Response([
+            'status' => 404,
+            'message' => 'not found'
+        ], 404);
     }
 
     /**
@@ -124,7 +152,11 @@ class CommentController extends Controller
      */
     public function destroy(string $id): Response
     {
-        $comment = Comment::where('id', $id)->first();
+        $user = Auth::guard('api')->user();
+
+        $comment = Comment::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
 
         if ($comment) {
             $comment->delete();

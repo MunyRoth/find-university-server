@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignid('university_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->integer('rate', 2);
+            $table->integer('rate');
             $table->boolean('is_pending')
                 ->default(config('settings.default_is_pending'));
             $table->boolean('is_approved')

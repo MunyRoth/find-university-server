@@ -115,6 +115,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('comment/by_user', [CommentController::class, 'showByUser']);
     Route::get('comment/by_user/{universityId}', [CommentController::class, 'showByUserUniversity']);
     Route::get('comment/by_university/{universityId}', [CommentController::class, 'showByUniversity']);
+    Route::put('comment/{universityId}', [CommentController::class, 'update']);
     Route::delete('comment/{id}', [CommentController::class, 'destroy']);
 
     // Rate
