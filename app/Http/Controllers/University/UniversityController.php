@@ -170,7 +170,6 @@ class UniversityController extends Controller
     {
         $university = University::where('id', $id)->first();
         if ($university) {
-
             // delete logo
             $logoUrl = $university->logo;
             preg_match("/\/v(\d+)\/(\w+)\/(\w+)/",$logoUrl,$recordMatch);

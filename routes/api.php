@@ -110,8 +110,19 @@ Route::middleware('auth:api')->group(function () {
     Route::post('email/verify', [VerificationController::class, 'resendEmail'])
         ->middleware('throttle:6,1');
 
-    Route::resource('comment', CommentController::class);
-    Route::resource('rate', RateController::class);
+    // Comment
+    Route::post('comment', [CommentController::class, 'store']);
+    Route::get('comment/by_user', [CommentController::class, 'showByUser']);
+    Route::get('comment/by_user/{universityId}', [CommentController::class, 'showByUserUniversity']);
+    Route::get('comment/by_university/{universityId}', [CommentController::class, 'showByUniversity']);
+    Route::delete('comment/{id}', [CommentController::class, 'destroy']);
+
+    // Rate
+    Route::post('rate', [RateController::class, 'store']);
+    Route::get('rate/by_user', [RateController::class, 'showByUser']);
+    Route::get('rate/by_user/{universityId}', [RateController::class, 'showByUserUniversity']);
+    Route::get('rate/by_university', [RateController::class, 'showByUniversity']);
+    Route::delete('rate/{id}', [RateController::class, 'destroy']);
 
     Route::middleware('admin')->group(function () {
         // Major

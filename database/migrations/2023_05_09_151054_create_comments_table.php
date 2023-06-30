@@ -20,6 +20,10 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->text('comment');
+            $table->boolean('is_pending')
+                ->default(config('settings.default_is_pending'));
+            $table->boolean('is_approved')
+                ->default(config('settings.default_is_approved'));
             $table->timestamps();
         });
     }

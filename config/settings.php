@@ -15,5 +15,17 @@ return [
     'roles' => [
         'user' => 'user',
         'admin' => 'admin'
+    ],
+
+    'default_is_pending' => env('IS_PENDING_DEFAULT', true),
+    'is_pending' => [
+        'true' => true,
+        'false' => false
+    ],
+
+    'default_is_approved' => env('IS_APPROVED_DEFAULT', false),
+    'is_approved' => [
+    'true' => true,
+    'false' => false
     ]
 ];

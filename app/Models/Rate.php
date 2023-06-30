@@ -11,7 +11,6 @@ class Rate extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'university_id',
         'rate'
     ];

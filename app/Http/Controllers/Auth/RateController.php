@@ -4,54 +4,122 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class RateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Rate $rate): Response
     {
-        $rate->create($request->all());
+        $user = Auth::guard('api')->user();
+
+        // check email verification
+        if ($user->hasVerifiedEmail() || $user->provider_id != '') {
+
+            if (Rate::where('user_id', $user->id)
+                ->where('university_id', $request->university_id)
+                ->exists()) {
+
+                return Response([
+                    'status' => 200,
+                    'massage' => 'false',
+                ], 200);
+            }
+
+
+            // get all from request
+            $req = $request->all();
+
+            // validate the request
+            $validator = Validator::make($req, [
+                'university_id' =>'required',
+                'rate' => 'required'
+            ]);
+
+            if ($validator->fails()){
+                return Response([
+                    "status" => 400,
+                    "message" => $validator->errors()->first()
+                ], 400);
+            }
+
+            $rate->user_id = $user->id;
+            $rate->university_id = $request->university_id;
+            $rate->rate = $request->rate;
+            $rate->save();
+
+            return Response([
+                'status' => 201,
+                'massage' => 'success',
+            ], 201);
+        }
 
         return Response([
-            'status' => 201,
-            'data' => $request->all()
-        ], 201);
+            'status' => 403,
+            'message' => 'your email is not verified',
+            'data' => [
+                'email' => $user->email
+            ],
+        ], 403);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showByUser(): Response
     {
-        //
-    }
+        $user = Auth::guard('api')->user();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+        $rates = Rate::where('user_id', $user->id)->get();
+
+        return Response([
+            'status' => 200,
+            'massage' => 'success',
+            'data' => $rates
+        ], 200);
+    }
+    public function showByUserUniversity(string $universityId): Response
     {
-        //
+        $user = Auth::guard('api')->user();
+
+        $rates = Rate::where('user_id', $user->id)
+            ->where('university_id', $universityId)
+            ->get();
+
+        return Response([
+            'status' => 200,
+            'massage' => 'success',
+            'data' => $rates
+        ], 200);
+    }
+    public function showByUniversity(string $universityId): Response
+    {
+        $rates = Rate::where('university_id', $universityId)
+            ->where('is_approved', true)
+            ->get();
+
+        $data = [];
+        foreach ($rates as $rate) {
+            $user = User::where('id', $rate->user_id)->first();
+
+            $data[] = [
+                'user_profile' => $user->profile,
+                'user_name' => $user->name,
+                'rate' => $rate->rate
+            ];
+        }
+
+        return Response([
+            'status' => 200,
+            'massage' => 'success',
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -65,8 +133,22 @@ class RateController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): Response
     {
-        //
+        $rate = Rate::where('id', $id)->first();
+
+        if ($rate) {
+            $rate->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully'
+            ], 200);
+        }
+
+        return Response([
+            'status' => 404,
+            'message' => 'not found'
+        ], 404);
     }
 }
