@@ -17,15 +17,8 @@ class FacultyController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $faculty->with('university')->get()
+            'data' => $faculty->get()
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
     }
 
     /**
@@ -35,8 +28,8 @@ class FacultyController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_id' => 'required|max:127',
-            'name_km' => 'required|max:127'
+            'university_id' => 'required|string|max:127',
+            'name_km' => 'required|string|max:127'
         ]);
 
         if ($validator->fails()){
@@ -61,18 +54,7 @@ class FacultyController extends Controller
     {
         return Response([
             'status' => '200',
-            'data' => $faculty
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Faculty $faculty): Response
-    {
-        return Response([
-            'status' => '200',
-            'data' => $faculty
+            'data' => $faculty->load('departments')
         ], 200);
     }
 

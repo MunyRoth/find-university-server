@@ -28,7 +28,7 @@ class MajorPriceController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'name_km' => 'required|max:127'
+            'price_use' => 'required|string|max:127'
         ]);
 
         if ($validator->fails()){

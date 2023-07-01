@@ -29,7 +29,7 @@ class UniversityImageController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_id' => 'required|max:127',
+            'university_id' => 'required|string|max:127',
             'image' => 'required|image|mimes:jpeg,jpg,png|max:4095' // kilobytes
         ]);
 

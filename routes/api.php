@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RateController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\MajorRecommendationController;
+use App\Http\Controllers\MajorSubjectController;
 use App\Http\Controllers\MajorTypeController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\University\DepartmentController;
@@ -115,7 +116,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('comment/by_user', [CommentController::class, 'showByUser']);
     Route::get('comment/by_user/{universityId}', [CommentController::class, 'showByUserUniversity']);
     Route::get('comment/by_university/{universityId}', [CommentController::class, 'showByUniversity']);
-    Route::put('comment/{universityId}', [CommentController::class, 'update']);
+    Route::put('comment/{id}', [CommentController::class, 'update']);
     Route::delete('comment/{id}', [CommentController::class, 'destroy']);
 
     // Rate
@@ -125,12 +126,18 @@ Route::middleware('auth:api')->group(function () {
     Route::get('rate/by_university', [RateController::class, 'showByUniversity']);
     Route::delete('rate/{id}', [RateController::class, 'destroy']);
 
+    // ------------------------ Admin Access ------------------------ //
     Route::middleware('admin')->group(function () {
-        // Major
+        // Major Type
         Route::controller(MajorTypeController::class)->group(function () {
             Route::post('/major_types', 'store');
             Route::put('/major_types/{id}', 'update');
             Route::delete('/major_types/{id}', 'destroy');
+        });
+
+        // Major Subject
+        Route::controller(MajorSubjectController::class)->group(function () {
+            Route::post('/major_subjects', 'store');
         });
 
         // Universities

@@ -16,7 +16,7 @@ class MajorTypeController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $majorType->with('department')->get()
+            'data' => $majorType->with('majors')->get()
         ], 200);
     }
 
@@ -27,7 +27,7 @@ class MajorTypeController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'name_km' => 'required|max:127'
+            'name_km' => 'required|string|max:127'
         ]);
 
         if ($validator->fails()){

@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('major_prices', function (Blueprint $table) {
+        Schema::create('major_subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignid('major_id')
+            $table->foreignid('major_type_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('price_khr', 15)
-                ->nullable();
-            $table->string('price_usd', 15);
+            $table->foreignid('high_school_subject_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->boolean('is_needed');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('major_prices');
+        Schema::dropIfExists('major_subjects');
     }
 };

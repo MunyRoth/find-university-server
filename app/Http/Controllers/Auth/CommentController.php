@@ -28,8 +28,8 @@ class CommentController extends Controller
 
             // validate the request
             $validator = Validator::make($req, [
-                'university_id' =>'required',
-                'comment' => 'required'
+                'university_id' =>'required|string',
+                'comment' => 'required|string'
             ]);
 
             if ($validator->fails()) {
