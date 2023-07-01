@@ -17,15 +17,8 @@ class MajorController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $major->with('department')->get()
+            'data' => $major->with('majorType', 'department', 'subjects')->get()
         ], 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
     }
 
     /**
@@ -35,10 +28,10 @@ class MajorController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'department_id' => 'required|max:127',
-            'major_type_id' => 'required|max:127',
-            'name_km' => 'required|max:127',
-            'num_semesters' => 'required|max:2'
+            'department_id' => 'required|string|max:127',
+            'major_type_id' => 'required|string|max:127',
+            'name_km' => 'required|string|max:127',
+            'num_semesters' => 'required|integer|max:2'
         ]);
 
         if ($validator->fails()){
@@ -62,7 +55,7 @@ class MajorController extends Controller
     {
         return Response([
             'status' => '200',
-            'data' => $major
+            'data' => $major->load('majorType', 'department', 'subjects')
         ], 200);
     }
 

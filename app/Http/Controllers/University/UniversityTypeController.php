@@ -28,7 +28,7 @@ class UniversityTypeController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'type_km' => 'required|max:31'
+            'type_km' => 'required|string|max:31'
         ]);
 
         if ($validator->fails()){

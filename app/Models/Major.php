@@ -24,9 +24,9 @@ class Major extends Model
         return $this->belongsTo(MajorType::class);
     }
 
-    public function university(): BelongsTo
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(University::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function subjects(): HasMany

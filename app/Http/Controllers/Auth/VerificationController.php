@@ -32,7 +32,8 @@ class VerificationController extends Controller
 
         return Response([
             'status' => 200,
-            'message' => 'already resend email'
+            'message' => 'already resend email',
+            'data' => ''
         ], 200);
     }
 }

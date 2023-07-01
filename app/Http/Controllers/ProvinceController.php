@@ -22,21 +22,13 @@ class ProvinceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Province $province): Response
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'name_km' => 'required|max:127'
+            'name_km' => 'required|string|max:127'
         ]);
 
         if ($validator->fails()){
@@ -58,17 +50,6 @@ class ProvinceController extends Controller
      * Display the specified resource.
      */
     public function show(Province $province): Response
-    {
-        return Response([
-            'status' => 200,
-            'data' => $province
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Province $province): Response
     {
         return Response([
             'status' => 200,
