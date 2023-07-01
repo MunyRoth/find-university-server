@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\HighSchoolSubject;
 use App\Models\MajorType;
 use App\Models\Province;
 use App\Models\UniversityType;
@@ -17,11 +16,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // \App\Models\User::factory(10)->create();
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
         User::create([
             'name' => 'Admin',
             'email' => 'dr.munyroth@gmail.com',
             'role' => 'admin',
-            'email_verified_at' => now(),
+            'email_verified_at' => date(today()),
             'password' => bcrypt('admin@143272')
         ]);
 
@@ -29,7 +35,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'munyroth@gmail.com',
             'role' => 'user',
-            'email_verified_at' => now(),
+            'email_verified_at' => date(today()),
             'password' => bcrypt('user@1234')
         ]);
 
@@ -303,22 +309,6 @@ class DatabaseSeeder extends Seeder
 //            ['name_km' => 'គណនី', 'name_en' => "Women's Studies"],
 //            ['name_km' => 'គណនី', 'name_en' => 'Writing'],
 //            ['name_km' => 'គណនី', 'name_en' => 'Zoology'],
-        ]);
-
-        HighSchoolSubject::insert([
-            ['name_km' => 'ភាសាខ្មែរ', 'name_en' => 'Khmer'],
-            ['name_km' => 'ភាសាអង់គ្លេស', 'name_en' => 'English'],
-            ['name_km' => 'ភាសាបារាំង', 'name_en' => 'French'],
-            ['name_km' => 'គណិតវិទ្យា', 'name_en' => 'Mathematics'],
-            ['name_km' => 'រូបវិទ្យា', 'name_en' => 'Physics'],
-            ['name_km' => 'គីមីវិទ្យា', 'name_en' => 'Chemistry'],
-            ['name_km' => 'ជីវវិទ្យា', 'name_en' => 'Biology'],
-            ['name_km' => 'ផែនដីវិទ្យា', 'name_en' => 'Earth'],
-            ['name_km' => 'ប្រវត្តវិទ្យា', 'name_en' => 'History'],
-            ['name_km' => 'ភូមិវិទ្យា', 'name_en' => 'Geography'],
-            ['name_km' => 'សីលធម៌-ពលរដ្ឋវិទ្យា', 'name_en' => 'Morality'],
-            ['name_km' => 'សេដ្ឋកិច្ចវិទ្យា', 'name_en' => 'Economics'],
-            ['name_km' => 'ព័ត៌មានវិទ្យា', 'name_en' => 'Information Technology'],
         ]);
     }
 }

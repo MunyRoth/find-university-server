@@ -19,7 +19,7 @@ class UniversityController extends Controller
         return Response([
             'status' => 200,
             'message' => 'got successfully',
-            'data' => $universities->with('universityType', 'universityBranches.province')->get()
+            'data' => $universities->with('universityType', 'universityBranches.province', 'images')->get()
         ], 200);
     }
 
@@ -30,17 +30,16 @@ class UniversityController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_type_id' => 'required|string|max:2',
-            'name_km' => 'required|string|max:255',
-            'about_km' => 'required|string|max:65535',
+            'university_type_id' => 'required|max:2',
+            'name_km' => 'required|max:255',
+            'about_km' => 'required|max:65535',
             'logo' => 'required|image|mimes:jpeg,jpg,png|max:8095' // kilobytes
         ]);
 
         if ($validator->fails()){
             return Response([
                 'status' => 403,
-                'massage' => 'validation failed',
-                'data' => $request->all(),
+                'massage' => 'validation failed'
             ], 403);
         }
 

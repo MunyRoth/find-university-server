@@ -17,8 +17,15 @@ class DepartmentController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $department->get()
+            'data' => $department->with('faculty')->get()
         ], 200);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
     }
 
     /**
@@ -28,8 +35,8 @@ class DepartmentController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'faculty_id' => 'required|string|max:127',
-            'name_km' => 'required|string|max:127'
+            'faculty_id' => 'required|max:127',
+            'name_km' => 'required|max:127'
         ]);
 
         if ($validator->fails()){
@@ -54,7 +61,18 @@ class DepartmentController extends Controller
     {
         return Response([
             'status' => '200',
-            'data' => $department->load('majors')
+            'data' => $department
+        ], 200);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Department $department): Response
+    {
+        return Response([
+            'status' => '200',
+            'data' => $department
         ], 200);
     }
 

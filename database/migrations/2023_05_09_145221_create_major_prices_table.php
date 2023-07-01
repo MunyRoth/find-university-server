@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignid('major_id')
                 ->constrained()
                 ->onDelete('cascade');
+            $table->string('price_usd', 15);
             $table->string('price_khr', 15)
                 ->nullable();
-            $table->string('price_usd', 15);
             $table->timestamps();
         });
     }

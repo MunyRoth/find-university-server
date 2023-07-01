@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\MajorType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -31,15 +30,15 @@ class MajorRecommendationController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'khmer' => 'required|integer|max:2',
-            'maths' => 'required|integer|max:2',
-            'physic' => 'required|integer|max:2',
-            'chemistry' => 'required|integer|max:2',
-            'biology' => 'required|integer|max:2',
-            'earth' => 'required|integer|max:2',
-            'history' => 'required|integer|max:2',
-            'geography' => 'required|integer|max:2',
-            'morality' => 'required|integer|max:2',
+            'khmer' => 'required|max:2',
+            'maths' => 'required|max:2',
+            'physic' => 'required|max:2',
+            'chemistry' => 'required|max:2',
+            'biology' => 'required|max:2',
+            'earth' => 'required|max:2',
+            'history' => 'required|max:2',
+            'geography' => 'required|max:2',
+            'morality' => 'required|max:2',
         ]);
 
         if ($validator->fails()){
@@ -176,7 +175,6 @@ class MajorRecommendationController extends Controller
             ],
         ];
 
-        $items = MajorType::all();
         // Create feature vectors
         $featureVectors = [];
         foreach ($items as $item) {

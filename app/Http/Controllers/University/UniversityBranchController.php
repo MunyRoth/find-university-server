@@ -28,10 +28,10 @@ class UniversityBranchController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_id' => 'required|string|max:127',
-            'province_id' => 'required|string|max:63',
-            'address_km' => 'required|string|max:127',
-            'location' => 'required|string|max:65535'
+            'university_id' => 'required|max:127',
+            'province_id' => 'required|max:63',
+            'address_km' => 'required|max:127',
+            'location' => 'required|max:65535'
         ]);
 
         if ($validator->fails()){

@@ -23,7 +23,7 @@ class PasswordController extends Controller
 
         // validate the request
         $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string',
+            'current_password' => 'required',
             'password' => 'required|min:8|confirmed'
         ]);
 
@@ -103,7 +103,7 @@ class PasswordController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'token' => 'required|string',
+            'token' => 'required',
             'email' => 'required|email|max:255',
             'password' => 'required|min:8|confirmed'
         ]);
