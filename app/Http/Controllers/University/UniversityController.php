@@ -61,8 +61,8 @@ class UniversityController extends Controller
 
         return Response([
             'status' => 201,
-            'data' => $university,
-            'message' => 'uploaded successfully'
+            'message' => 'uploaded successfully',
+            'data' => $university
         ], 201);
     }
 
@@ -71,7 +71,7 @@ class UniversityController extends Controller
      */
     public function show($id): Response
     {
-        $university = University::where('id', $id)->first();
+        $university = University::find($id);
         if ($university) {
             return Response([
                 'status' => 200,
@@ -79,9 +79,11 @@ class UniversityController extends Controller
                 'data' => $university->load('universityType', 'universityBranches.province', 'faculties.departments.majors.subjects', 'images')
             ], 200);
         }
+
         return Response([
             'status' => 404,
-            'message' => 'not found'
+            'message' => 'not found',
+            'data' => ''
         ], 404);
     }
 
@@ -90,7 +92,8 @@ class UniversityController extends Controller
      */
     public function update(Request $request, $id): Response
     {
-        $university = University::where('id', $id)->first();
+        $university = University::find($id);
+
         if ($university) {
             // update logo
             if (!empty($request->logo))
@@ -156,13 +159,15 @@ class UniversityController extends Controller
 
             return Response([
                 'status' => 200,
-                'message' => 'updated successfully'
-            ]);
+                'message' => 'updated successfully',
+                'data' => ''
+            ], 200);
         }
 
         return Response([
             'status' => 404,
-            'message' => 'no university'
+            'message' => 'not found',
+            'data' => ''
         ], 404);
     }
 
@@ -171,7 +176,8 @@ class UniversityController extends Controller
      */
     public function destroy($id): Response
     {
-        $university = University::where('id', $id)->first();
+        $university = University::find($id);
+
         if ($university) {
             // delete logo
             $logoUrl = $university->logo;
@@ -189,7 +195,8 @@ class UniversityController extends Controller
 
         return Response([
             'status' => 404,
-            'message' => 'not found'
+            'message' => 'not found',
+            'data' => ''
         ], 404);
     }
 }

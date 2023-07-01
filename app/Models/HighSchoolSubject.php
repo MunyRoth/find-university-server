@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class HighSchoolSubject extends Model
 {
     use HasFactory;
 
-    public function subjects(): MorphToMany
+    public function majors(): BelongsToMany
     {
-        return $this->morphToMany(MajorType::class, 'majorSubject');
+        return $this->belongsToMany(MajorType::class, 'major_subject');
     }
 }

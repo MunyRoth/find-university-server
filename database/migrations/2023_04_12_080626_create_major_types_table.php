@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name_km', 63);
             $table->string('name_en', 63)
                 ->nullable();
+            $table->string('image_url')
+                ->nullable();
             $table->timestamps();
         });
     }

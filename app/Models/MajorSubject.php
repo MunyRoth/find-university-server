@@ -8,10 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class MajorSubject extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'major_type_id',
-        'high_school_subject_id',
-        'is_needed'
-    ];
 }

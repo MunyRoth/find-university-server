@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('major_subjects', function (Blueprint $table) {
+        Schema::create('major_subject', function (Blueprint $table) {
             $table->id();
             $table->foreignid('major_type_id')
                 ->constrained()
@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignid('high_school_subject_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->boolean('is_needed');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('major_subjects');
+        Schema::dropIfExists('major_subject');
     }
 };

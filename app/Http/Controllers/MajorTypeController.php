@@ -16,7 +16,7 @@ class MajorTypeController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $majorType->with('majors')->get()
+            'data' => $majorType->with('majors', 'subjects')->get()
         ], 200);
     }
 
@@ -48,8 +48,10 @@ class MajorTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MajorType $majorType): Response
+    public function show($id): Response
     {
+        $majorType = MajorType::find($id);
+
         return Response([
             'status' => '200',
             'data' => $majorType
@@ -59,23 +61,50 @@ class MajorTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MajorType $majorType): Response
+    public function update(Request $request, $id): Response
     {
-        $majorType->name_km = $request->name_km;
-        $majorType->name_en = $request->name_en;
-        $majorType->save();
+        $majorType = MajorType::find($id);
+
+        if ($majorType) {
+            if ($request->name_km != '') {
+                $majorType->update([
+                    'name_km' => $request->name_km
+                ]);
+            }
+
+            if ($request->name_en != '') {
+                $majorType->update([
+                    'name_en' => $request->name_en
+                ]);
+            }
+
+            if ($request->subjects != '') {
+                $majorType->subjects()->sync([
+                    $request->subjects
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $majorType
-        ]);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MajorType $majorType): Response
+    public function destroy($id): Response
     {
+        $majorType = MajorType::find($id);
+
         $majorType->delete();
 
         return Response([

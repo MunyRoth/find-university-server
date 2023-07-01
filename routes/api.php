@@ -7,7 +7,6 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RateController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\MajorRecommendationController;
-use App\Http\Controllers\MajorSubjectController;
 use App\Http\Controllers\MajorTypeController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\University\DepartmentController;
@@ -133,11 +132,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/major_types', 'store');
             Route::put('/major_types/{id}', 'update');
             Route::delete('/major_types/{id}', 'destroy');
-        });
-
-        // Major Subject
-        Route::controller(MajorSubjectController::class)->group(function () {
-            Route::post('/major_subjects', 'store');
         });
 
         // Universities
