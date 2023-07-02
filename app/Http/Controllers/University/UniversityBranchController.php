@@ -43,12 +43,10 @@ class UniversityBranchController extends Controller
             ], 403);
         }
 
-        $branch->create($request->all());
-
         return Response([
             'status' => 201,
             'message' => 'created successfully',
-            'data' => ''
+            'data' => $branch->create($request->all())
         ], 201);
     }
 

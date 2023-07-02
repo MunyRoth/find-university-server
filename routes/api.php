@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\RateController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\HighSchoolSubjectController;
 use App\Http\Controllers\MajorRecommendationController;
 use App\Http\Controllers\MajorTypeController;
 use App\Http\Controllers\ProvinceController;
@@ -49,6 +50,11 @@ Route::middleware('guest')->group(function () {
     Route::controller(MajorTypeController::class)->group(function () {
         Route::get('/major_types', 'index');
         Route::get('/major_types/{id}', 'show');
+    });
+
+    // High school subjects
+    Route::controller(HighSchoolSubjectController::class)->group(function () {
+        Route::get('/high_school_subjects', 'index');
     });
 
     // City and Provinces

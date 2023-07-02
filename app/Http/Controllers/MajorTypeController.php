@@ -16,6 +16,7 @@ class MajorTypeController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $majorType->with('majors', 'subjects')->get()
         ], 200);
     }

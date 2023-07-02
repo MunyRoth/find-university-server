@@ -19,9 +19,9 @@ class MajorRecommendationController extends Controller
         $bLength = 0;
 
         foreach ($a as $key => $value) {
-            $dotProduct += $value['value'] * $b[$key]['value'];
-            $aLength += $value['value'] * $value['value'];
-            $bLength += $b[$key]['value'] * $b[$key]['value'];
+            $dotProduct += $value * $b[$key];
+            $aLength += $value * $value;
+            $bLength += $b[$key] * $b[$key];
         }
 
         return $dotProduct / (sqrt($aLength) * sqrt($bLength));
@@ -44,7 +44,7 @@ class MajorRecommendationController extends Controller
         if ($validator->fails()){
             return Response([
                 'status' => 403,
-                'massage' => 'validation failed',
+                'massage' => $validator->messages(),
                 'data' => ''
             ], 403);
         }
@@ -224,9 +224,45 @@ class MajorRecommendationController extends Controller
 
         // Calculate the similarity between items
         $similarities = [];
-        foreach ($featureVectors as $featureVectorA) {
-            $similarity = $this->cosine_similarity($featureVectorA['subjects'], $subjects);
-            $similarities[$featureVectorA['major']] = $similarity;
+        foreach ($featureVectors as $featureVector) {
+            $i = [
+                [
+                    'subject' => 'khmer',
+                    'value' => 0
+                ],
+                [
+                    'name' => 'maths',
+                    'value' => 0
+                ],
+                [
+                    'subject' => 'physics',
+                    'value' => 0
+                ],
+                [
+                    'subject' => 'chemistry',
+                    'value' => 0
+                ],
+                [
+                    'subject' => 'biology',
+                    'value' => 0
+                ],
+                [
+                    'subject' => 'history',
+                    'value' => 0
+                ],
+                [
+                    'subject' => 'geography',
+                    'value' => 0
+                ],
+                [
+                    'subject' => 'morality',
+                    'value' => 0
+                ]
+            ];
+
+
+            $similarity = $this->cosine_similarity($featureVector['subjects'], $subjects);
+            $similarities[$featureVector['major']] = $similarity;
         }
 
         // Get recommendations for the user

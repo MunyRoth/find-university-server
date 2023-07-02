@@ -17,6 +17,7 @@ class FacultyController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $faculty->get()
         ], 200);
     }
@@ -35,54 +36,95 @@ class FacultyController extends Controller
         if ($validator->fails()){
             return Response([
                 'status' => 403,
-                'massage' => 'validation failed'
+                'massage' => $validator->messages(),
+                'data' => ''
             ], 403);
         }
 
-        $faculty->create($request->all());
-
         return Response([
             'status' => 201,
-            'data' => $request->all()
+            'message' => 'created successfully',
+            'data' => $faculty->create($request->all())
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Faculty $faculty): Response
+    public function show($id): Response
     {
+        $faculty = Faculty::find($id);
+
+        if($faculty) {
+            return Response([
+                'status' => '200',
+                'message' => 'got successfully',
+                'data' => $faculty->load('departments')
+            ], 200);
+        }
+
         return Response([
-            'status' => '200',
-            'data' => $faculty->load('departments')
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Faculty  $faculty): Response
+    public function update(Request $request, $id): Response
     {
-        $faculty->name_km = $request->name_km;
-        $faculty->name_en = $request->name_en;
-        $faculty->save();
+        $faculty = Faculty::find($id);
+
+        if($faculty) {
+            if ($request->name_km != '') {
+                $faculty->update([
+                    'name_km' => $request->name_km
+                ]);
+            }
+
+            if ($request->name_en != '') {
+                $faculty->update([
+                    'name_en' => $request->name_en
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $faculty
-        ]);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Faculty $faculty): Response
+    public function destroy($id): Response
     {
-        $faculty->delete();
+        $faculty = Faculty::find($id);
+
+        if($faculty) {
+            $faculty->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'message' => 'deleted successfully'
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 }
