@@ -29,32 +29,38 @@ class PasswordController extends Controller
 
         if ($validator->fails()){
             return Response([
-                "status" => 400,
-                "message" => $validator->errors()->first()
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
             ], 400);
         }
 
         try {
             if (!(Hash::check(request('current_password'), Auth::user()->password))) {
                 return Response([
-                    "status" => 400,
-                    "message" => "check your old password"
+                    'status' => 400,
+                    'message' => 'check your old password',
+                    'data' => ''
                 ], 400);
             } else if ((Hash::check(request('password'), Auth::user()->password))) {
-                return Response(["status" => 400,
-                    "message" => "please enter a password which is not similar then current password"
+                return Response([
+                    'status' => 400,
+                    'message' => 'please enter a password which is not similar then current password',
+                    'data' => ''
                 ], 400);
             } else {
                 User::where('id', $userid)->update(['password' => Hash::make($request->password_confirmation)]);
                 return Response([
-                    "status" => 200,
-                    "message" => "password updated successfully."
+                    'status' => 200,
+                    'message' => 'password updated successfully',
+                    'data' => ''
                 ], 200);
             }
         } catch (Exception $ex) {
             return Response([
-                "status" => 500,
-                "message" => $ex->errorInfo[2] ?? $ex->getMessage()
+                'status' => 500,
+                'message' => $ex->errorInfo[2] ?? $ex->getMessage(),
+                'data' => ''
             ], 500);
         }
     }
@@ -68,8 +74,9 @@ class PasswordController extends Controller
 
         if ($validator->fails()){
             return Response([
-                "status" => 400,
-                "message" => $validator->errors()->first()
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
             ], 400);
         }
 
@@ -78,23 +85,27 @@ class PasswordController extends Controller
 
             return match ($status) {
                 Password::RESET_LINK_SENT => Response([
-                    "status" => 200,
-                    "message" => trans($status)
+                    'status' => 200,
+                    'message' => trans($status),
+                    'data' => ''
                 ], 200),
                 Password::INVALID_USER => Response([
-                    "status" => 400,
-                    "message" => trans($status)
+                    'status' => 400,
+                    'message' => trans($status),
+                    'data' => ''
                 ], 400),
                 default => Response([
-                    "status" => 200,
-                    "message" => 'success'
+                    'status' => 200,
+                    'message' => 'send reset link successfully',
+                    'data' => ''
                 ], 200),
             };
 
         } catch (\Swift_TransportException|Exception $ex) {
             return Response([
-                "status" => 500,
-                "message" => $ex->getMessage(),
+                'status' => 500,
+                'message' => $ex->getMessage(),
+                'data' => ''
             ], 500);
         }
     }
@@ -110,8 +121,9 @@ class PasswordController extends Controller
 
         if ($validator->fails()){
             return Response([
-                "status" => 400,
-                "message" => $validator->errors()->first()
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
             ], 400);
         }
 
@@ -130,12 +142,16 @@ class PasswordController extends Controller
 
         if ($status == Password::PASSWORD_RESET) {
             return Response([
-                'message'=> 'password reset successfully'
-            ]);
+                'status' => 200,
+                'message'=> 'password reset successfully',
+                'data' => ''
+            ], 200);
         }
 
         return Response([
-            'message'=> __($status)
+            'status' => 500,
+            'message'=> __($status),
+            'data' => ''
         ], 500);
     }
 }

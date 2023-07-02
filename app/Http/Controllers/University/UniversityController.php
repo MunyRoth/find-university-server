@@ -4,6 +4,7 @@ namespace App\Http\Controllers\University;
 
 use App\Http\Controllers\Controller;
 use App\Models\University;
+use App\Models\UniversityBranch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -33,15 +34,19 @@ class UniversityController extends Controller
             'university_type_id' => 'required|integer',
             'name_km' => 'required|string|max:255',
             'about_km' => 'required|string|max:65535',
-            'logo' => 'required|image|mimes:jpeg,jpg,png|max:8095' // kilobytes
+            'logo' => 'required|image|mimes:jpeg,jpg,png|max:8095', // kilobytes
+
+            'province_id' => 'required|integer|max:63',
+            'address_km' => 'required|string|max:127',
+            'location' => 'required|string|max:65535'
         ]);
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => 'validation failed',
-                'data' => $request->all(),
-            ], 403);
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
+            ], 400);
         }
 
         $logoUrl = Cloudinary::upload($request->file('logo')->getRealPath(), [
@@ -58,6 +63,12 @@ class UniversityController extends Controller
         $university->email = $request->email;
         $university->phone = $request->phone;
         $university->save();
+
+        $universityBranch = new UniversityBranch;
+        $universityBranch->province_id = $request->province_id;
+        $universityBranch->address_km = $request->address_km;
+        $universityBranch->location = $request->location;
+        $university->universityBranches()->save($universityBranch);
 
         return Response([
             'status' => 201,
@@ -189,7 +200,8 @@ class UniversityController extends Controller
 
             return Response([
                 'status' => 200,
-                'message' => 'deleted successfully'
+                'message' => 'deleted successfully',
+                'data' => ''
             ], 200);
         }
 

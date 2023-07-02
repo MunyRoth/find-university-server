@@ -34,15 +34,17 @@ class RateController extends Controller
 
             if ($validator->fails()) {
                 return Response([
-                    "status" => 400,
-                    "message" => $validator->errors()->first()
+                    'status' => 400,
+                    'message' => $validator->errors()->first(),
+                    'data' => ''
                 ], 400);
             }
 
             if (!University::where('id', $request->university_id)->exists()) {
                 return Response([
                     'status' => 404,
-                    'message' => 'not found'
+                    'message' => 'not found',
+                    'data' => ''
                 ], 404);
             }
 
@@ -59,6 +61,7 @@ class RateController extends Controller
                 return Response([
                     'status' => 200,
                     'massage' => 'updated successfully',
+                    'data' => ''
                 ], 200);
             }
 
@@ -70,6 +73,7 @@ class RateController extends Controller
             return Response([
                 'status' => 201,
                 'massage' => 'rated successfully',
+                'data' => ''
             ], 201);
         }
 
@@ -105,11 +109,19 @@ class RateController extends Controller
             ->where('university_id', $universityId)
             ->get();
 
+        if ($rates) {
+            return Response([
+                'status' => 200,
+                'massage' => 'success',
+                'data' => $rates
+            ], 200);
+        }
+
         return Response([
-            'status' => 200,
-            'massage' => 'success',
-            'data' => $rates
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
     public function showByUniversity(string $universityId): Response
     {
@@ -117,22 +129,30 @@ class RateController extends Controller
             ->where('is_approved', true)
             ->get();
 
-        $data = [];
-        foreach ($rates as $rate) {
-            $user = User::where('id', $rate->user_id)->first();
+        if ($rates) {
+            $data = [];
+            foreach ($rates as $rate) {
+                $user = User::where('id', $rate->user_id)->first();
 
-            $data[] = [
-                'user_profile' => $user->profile,
-                'user_name' => $user->name,
-                'rate' => $rate->rate
-            ];
+                $data[] = [
+                    'user_profile' => $user->profile,
+                    'user_name' => $user->name,
+                    'rate' => $rate->rate
+                ];
+            }
+
+            return Response([
+                'status' => 200,
+                'massage' => 'got successfully',
+                'data' => $data
+            ], 200);
         }
 
         return Response([
-            'status' => 200,
-            'massage' => 'success',
-            'data' => $data
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
@@ -159,13 +179,15 @@ class RateController extends Controller
 
             return Response([
                 'status' => 200,
-                'message' => 'deleted successfully'
+                'message' => 'deleted successfully',
+                'data' => ''
             ], 200);
         }
 
         return Response([
             'status' => 404,
-            'message' => 'not found'
+            'message' => 'not found',
+            'data' => ''
         ], 404);
     }
 }

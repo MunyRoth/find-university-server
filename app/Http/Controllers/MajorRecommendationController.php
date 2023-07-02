@@ -46,10 +46,10 @@ class MajorRecommendationController extends Controller
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => $validator->messages(),
+                'status' => 400,
+                'message' => $validator->errors()->first(),
                 'data' => ''
-            ], 403);
+            ], 400);
         }
 
         // Collect data

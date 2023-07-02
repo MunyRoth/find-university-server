@@ -16,6 +16,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
+    // providers
     private const PROVIDERS = [
         'google',
         'facebook'
@@ -39,18 +40,21 @@ class AuthController extends Controller
             'password' => 'required|min:8|confirmed'
         ]);
 
+        // check validation
         if ($validator->fails()){
             return Response([
-                "status" => 400,
-                "message" => $validator->errors()->first()
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
             ], 400);
         }
 
-        // Check if email is registered
+        // check if email is registered
         if (User::where('email', $req['email'])->exists()){
             return Response([
                 'status' => 409,
                 'massage' => 'your email address is already registered',
+                'data' => ''
             ], 409);
         }
 
@@ -63,10 +67,16 @@ class AuthController extends Controller
         // send confirmation email
         event(new Registered($user));
 
+        // create token
+        $token = $user->createToken(env('API_AUTH_TOKEN_PASSPORT'))->accessToken;
+
         return Response([
             'status' => 201,
             'massage' => 'register successful',
-            'token' => $user->createToken(env('API_AUTH_TOKEN_PASSPORT'))->accessToken,
+            'token' => $token,
+            'data' => [
+                'token' => $token
+            ]
         ], 201);
     }
 
@@ -87,10 +97,12 @@ class AuthController extends Controller
             'password' => 'required|min:8'
         ]);
 
+        // check validation
         if ($validator->fails()){
             return Response([
-                "status" => 400,
-                "message" => $validator->errors()->first()
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
             ], 400);
         }
 
@@ -98,17 +110,24 @@ class AuthController extends Controller
         if (!Auth::attempt($req)) {
             return Response([
                 'status' => 403,
-                'message' => 'wrong email or password'
+                'message' => 'wrong email or password',
+                'data' => ''
             ], 403);
         }
 
         // get user from database
         $user = Auth::user();
 
+        // create token
+        $token = $user->createToken(env('API_AUTH_TOKEN_PASSPORT'))->accessToken;
+
         return Response([
             'status' => 200,
             'message' => 'login successful',
-            'token' => $user->createToken(env('API_AUTH_TOKEN_PASSPORT'))->accessToken
+            'token' => $token,
+            'data' => [
+                'token' => $token
+            ]
         ], 200);
     }
 
@@ -124,7 +143,8 @@ class AuthController extends Controller
 
         return Response([
             'status' => 200,
-            'massage' => 'logout successfully'
+            'massage' => 'logout successfully',
+            'data' => ''
         ],200);
     }
 

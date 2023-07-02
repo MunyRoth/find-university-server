@@ -22,4 +22,9 @@ class UniversityBranch extends Model
     {
         return $this->belongsTo(Province::class);
     }
+
+    public function university(): BelongsTo
+    {
+        return $this->belongsTo(University::class);
+    }
 }

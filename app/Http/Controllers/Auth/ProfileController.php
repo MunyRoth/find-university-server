@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class ProfileController extends Controller
         if ($user->hasVerifiedEmail() || $user->provider_id != '') {
             return Response([
                 'status' => 200,
-                'massage' => 'success',
+                'massage' => 'got profile successfully',
                 'data' => $user
             ],200);
         }
@@ -54,8 +55,21 @@ class ProfileController extends Controller
                 $userUpdate->update(['phone' => $request->phone]);
             }
 
-            if ($request->avatar != '') {
-                $userUpdate->update(['avatar' => $request->avatar]);
+            if (!empty($request->avatar))
+            {
+                // delete the old image file.
+                $avatarUrl = $userUpdate->avatar;
+                preg_match("/\/v(\d+)\/(\w+)\/(\w+)/",$avatarUrl,$recordMatch);
+                $id = $recordMatch[2].'/'.$recordMatch[3];
+                Cloudinary::destroy($id);
+
+                // upload new file
+                $avatarUrl = Cloudinary::upload($request->file('avatar')->getRealPath(), [
+                    'folder' => 'find_university'
+                ])->getSecurePath();
+
+                // update in table
+                $userUpdate->update(['avatar' => $avatarUrl]);
             }
 
             if ($request->name != '') {
@@ -64,13 +78,15 @@ class ProfileController extends Controller
 
             return Response([
                 'status' => 200,
-                'message' => 'updated successfully'
-            ]);
+                'message' => 'updated successfully',
+                'data' => ''
+            ], 200);
         }
 
         return Response([
             'status' => 403,
             'message' => 'your email is not verified',
+            'data' => ''
         ], 403);
     }
 }

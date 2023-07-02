@@ -17,6 +17,7 @@ class UniversityTypeController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $universityTypes->get()
         ], 200);
     }
@@ -33,44 +34,76 @@ class UniversityTypeController extends Controller
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => 'validation failed'
-            ], 403);
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
+            ], 400);
         }
 
         $universityType->create($request->all());
 
         return Response([
             'status' => 201,
-            'data' => $request->all()
+            'message' => 'created successfully',
+            'data' => ''
         ], 201);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UniversityType $universityType): Response
+    public function update(Request $request, $id): Response
     {
-        $universityType->type_km = $request->type_km;
-        $universityType->type_en = $request->type_en;
-        $universityType->save();
+        $universityType = UniversityType::find($id);
+
+        if ($universityType) {
+            if ($request->type_km != '') {
+                $universityType->update([
+                    'type_km' => $request->type_km
+                ]);
+            }
+
+            if ($request->type_en != '') {
+                $universityType->update([
+                    'type_en' => $request->type_en
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => $universityType
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $universityType
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UniversityType $universityType): Response
+    public function destroy($id): Response
     {
-        $universityType->delete();
+        $universityType = UniversityType::find($id);
+
+        if ($universityType) {
+            $universityType->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'message' => 'deleted successfully'
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 }

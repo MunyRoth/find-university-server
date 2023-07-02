@@ -18,6 +18,7 @@ class UniversityImageController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $universityImage->get()
         ], 200);
     }
@@ -30,14 +31,15 @@ class UniversityImageController extends Controller
         // validate the request
         $validator = Validator::make($request->all(), [
             'university_id' => 'required|integer',
-            'image' => 'required|image|mimes:jpeg,jpg,png|max:4095' // kilobytes
+            'image' => 'required|image|mimes:jpeg,jpg,png|max:8095' // kilobytes
         ]);
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => 'validation failed'
-            ], 403);
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
+            ], 400);
         }
 
         $imageUrl = Cloudinary::upload($request->file('image')->getRealPath(), [
@@ -50,7 +52,8 @@ class UniversityImageController extends Controller
 
         return Response([
             'status' => 201,
-            'message' => 'uploaded successfully'
+            'message' => 'uploaded successfully',
+            'data' => ''
         ], 201);
     }
 
@@ -64,6 +67,7 @@ class UniversityImageController extends Controller
 
         return Response([
             'status' => 200,
+            'message' => 'updated successfully',
             'data' => $universityImage
         ], 200);
     }
@@ -77,7 +81,8 @@ class UniversityImageController extends Controller
 
         return Response([
             'status' => 200,
-            'message' => 'deleted successfully'
+            'message' => 'deleted successfully',
+            'data' => ''
         ], 200);
     }
 }

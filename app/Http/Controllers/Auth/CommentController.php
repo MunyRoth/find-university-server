@@ -34,15 +34,17 @@ class CommentController extends Controller
 
             if ($validator->fails()) {
                 return Response([
-                    "status" => 400,
-                    "message" => $validator->errors()->first()
+                    'status' => 400,
+                    'message' => $validator->errors()->first(),
+                    'data' => ''
                 ], 400);
             }
 
             if (!University::where('id', $request->university_id)->exists()) {
                 return Response([
                     'status' => 404,
-                    'message' => 'not found'
+                    'message' => 'not found',
+                    'data' => ''
                 ], 404);
             }
 
@@ -54,6 +56,7 @@ class CommentController extends Controller
             return Response([
                 'status' => 201,
                 'message' => 'commented successfully',
+                'data' => ''
             ], 201);
         }
 
@@ -73,7 +76,7 @@ class CommentController extends Controller
     {
         $user = Auth::guard('api')->user();
 
-        $comments = Comment::where('user_id', $user->id)->get();
+        $comments = Comment::whereBelongsTo($user)->get();
 
         return Response([
             'status' => 200,
@@ -89,11 +92,19 @@ class CommentController extends Controller
             ->where('university_id', $universityId)
             ->get();
 
+        if ($comments) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $comments
+            ], 200);
+        }
+
         return Response([
-            'status' => 200,
-            'message' => 'got successfully',
-            'data' => $comments
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
     public function showByUniversity(string $universityId): Response
     {
@@ -101,22 +112,30 @@ class CommentController extends Controller
             ->where('is_approved', true)
             ->get();
 
-        $data = [];
-        foreach ($comments as $comment) {
-            $user = User::where('id', $comment->user_id)->first();
+        if ($comments) {
+            $data = [];
+            foreach ($comments as $comment) {
+                $user = User::where('id', $comment->user_id)->first();
 
-            $data[] = [
-                'user_profile' => $user->profile,
-                'user_name' => $user->name,
-                'comment' => $comment->comment
-            ];
+                $data[] = [
+                    'user_profile' => $user->profile,
+                    'user_name' => $user->name,
+                    'comment' => $comment->comment
+                ];
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $data
+            ], 200);
         }
 
         return Response([
-            'status' => 200,
-            'message' => 'got successfully',
-            'data' => $data
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
@@ -138,12 +157,14 @@ class CommentController extends Controller
             return Response([
                 'status' => 200,
                 'message' => 'updated successfully',
+                'data' => ''
             ], 200);
         }
 
         return Response([
             'status' => 404,
-            'message' => 'not found'
+            'message' => 'not found',
+            'data' => ''
         ], 404);
     }
 
@@ -163,13 +184,15 @@ class CommentController extends Controller
 
             return Response([
                 'status' => 200,
-                'message' => 'deleted successfully'
+                'message' => 'deleted successfully',
+                'data' => ''
             ], 200);
         }
 
         return Response([
             'status' => 404,
-            'message' => 'not found'
+            'message' => 'not found',
+            'data' => ''
         ], 404);
     }
 }

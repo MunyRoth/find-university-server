@@ -36,9 +36,10 @@ class SubjectController extends Controller
 
         if ($validator->fails()){
             return Response([
-                'status' => 403,
-                'massage' => 'validation failed'
-            ], 403);
+                'status' => 400,
+                'message' => $validator->errors()->first(),
+                'data' => ''
+            ], 400);
         }
 
         $subject->create($request->all());
