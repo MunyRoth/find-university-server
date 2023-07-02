@@ -31,21 +31,21 @@ class MajorRecommendationController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'khmer' => 'required|integer|max:2',
-            'maths' => 'required|integer|max:2',
-            'physic' => 'required|integer|max:2',
-            'chemistry' => 'required|integer|max:2',
-            'biology' => 'required|integer|max:2',
-            'earth' => 'required|integer|max:2',
-            'history' => 'required|integer|max:2',
-            'geography' => 'required|integer|max:2',
-            'morality' => 'required|integer|max:2',
+            'khmer' => 'required|integer|max:7',
+            'maths' => 'required|integer|max:7',
+            'physics' => 'required|integer|max:7',
+            'chemistry' => 'required|integer|max:7',
+            'biology' => 'required|integer|max:7',
+            'history' => 'required|integer|max:7',
+            'geography' => 'required|integer|max:7',
+            'morality' => 'required|integer|max:7',
         ]);
 
         if ($validator->fails()){
             return Response([
                 'status' => 403,
-                'massage' => 'validation failed'
+                'massage' => 'validation failed',
+                'data' => ''
             ], 403);
         }
 
@@ -176,7 +176,7 @@ class MajorRecommendationController extends Controller
             ],
         ];
 
-        $items = MajorType::all();
+//        $items = MajorType::all();
         // Create feature vectors
         $featureVectors = [];
         foreach ($items as $item) {

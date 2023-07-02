@@ -79,9 +79,7 @@ class MajorTypeController extends Controller
             }
 
             if ($request->subjects != '') {
-                $majorType->subjects()->sync([
-                    $request->subjects
-                ]);
+                $majorType->subjects()->sync($request->subjects);
             }
 
             return Response([
