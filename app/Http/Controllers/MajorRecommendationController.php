@@ -176,12 +176,12 @@ class MajorRecommendationController extends Controller
             ],
         ];
 
-//        $items = MajorType::all();
+        $items = MajorType::all();
         // Create feature vectors
         $featureVectors = [];
         foreach ($items as $item) {
             $featureVectors[] = [
-                'major' => $item['major'],
+                'major' => $item['name_km'],
                 'subjects' => $item['subjects'],
             ];
         }
@@ -207,10 +207,6 @@ class MajorRecommendationController extends Controller
             [
                 'subject' => 'biology',
                 'value' => $request->biology
-            ],
-            [
-                'subject' => 'earth',
-                'value' => $request->earth
             ],
             [
                 'subject' => 'history',

@@ -17,6 +17,7 @@ class UniversityBranchController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $branch->with('province')->get()
         ], 200);
     }
@@ -37,8 +38,8 @@ class UniversityBranchController extends Controller
         if ($validator->fails()){
             return Response([
                 'status' => 403,
-                'massage' => 'validation failed',
-                'data' => $request->all()
+                'massage' => $validator->messages(),
+                'data' => ''
             ], 403);
         }
 
@@ -46,58 +47,94 @@ class UniversityBranchController extends Controller
 
         return Response([
             'status' => 201,
-            'data' => $request->all()
+            'message' => 'created successfully',
+            'data' => ''
         ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(UniversityBranch $branch): Response
+    public function show($id): Response
     {
-        return Response([
-            'status' => 200,
-            'data' => $branch->load('province')
-        ], 200);
-    }
+        $branch = UniversityBranch::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UniversityBranch $branch): Response
-    {
+        if($branch) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $branch->load('province')
+            ], 200);
+        }
+
         return Response([
-            'status' => 200,
-            'data' => $branch
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UniversityBranch $branch): Response
+    public function update(Request $request, $id): Response
     {
-        $branch->province_id = $request->province_id;
-        $branch->address_km = $request->address_km;
-        $branch->address_en = $request->address_en;
-        $branch->save();
+        $branch = UniversityBranch::find($id);
+
+        if ($branch) {
+            if ($request->province_id != '') {
+                $branch->update([
+                    'province_id' => $request->province_id
+                ]);
+            }
+
+            if ($request->address_km != '') {
+                $branch->update([
+                    'address_km' => $request->address_km
+                ]);
+            }
+
+            if ($request->address_en != '') {
+                $branch->update([
+                    'address_en' => $request->address_en
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $branch
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UniversityBranch $branch): Response
+    public function destroy($id): Response
     {
-        $branch->delete();
+        $branch = UniversityBranch::find($id);
+
+        if ($branch) {
+            $branch->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'message' => 'deleted successfully'
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 }
