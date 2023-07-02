@@ -30,7 +30,7 @@ class UniversityController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_type_id' => 'required|string|max:2',
+            'university_type_id' => 'required|integer',
             'name_km' => 'required|string|max:255',
             'about_km' => 'required|string|max:65535',
             'logo' => 'required|image|mimes:jpeg,jpg,png|max:8095' // kilobytes

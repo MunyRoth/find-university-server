@@ -28,8 +28,8 @@ class RateController extends Controller
 
             // validate the request
             $validator = Validator::make($req, [
-                'university_id' =>'required|string',
-                'rate' => 'required|integer'
+                'university_id' =>'required|integer',
+                'rate' => 'required|integer|max:7'
             ]);
 
             if ($validator->fails()) {

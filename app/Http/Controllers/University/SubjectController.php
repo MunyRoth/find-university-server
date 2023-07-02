@@ -28,9 +28,9 @@ class SubjectController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'major_id' => 'required|string|max:127',
-            'year' => 'required|string|max:2',
-            'semester' => 'required|string|max:2',
+            'major_id' => 'required|integer',
+            'year' => 'required|integer|max:15',
+            'semester' => 'required|integer|max:31',
             'name_km' => 'required|string|max:63'
         ]);
 

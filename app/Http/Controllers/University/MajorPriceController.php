@@ -28,6 +28,7 @@ class MajorPriceController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
+            'major_id' => 'required|integer',
             'price_use' => 'required|string|max:127'
         ]);
 

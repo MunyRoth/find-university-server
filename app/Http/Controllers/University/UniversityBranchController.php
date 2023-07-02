@@ -28,8 +28,8 @@ class UniversityBranchController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_id' => 'required|string|max:127',
-            'province_id' => 'required|string|max:63',
+            'university_id' => 'required|integer',
+            'province_id' => 'required|integer|max:63',
             'address_km' => 'required|string|max:127',
             'location' => 'required|string|max:65535'
         ]);
@@ -37,7 +37,8 @@ class UniversityBranchController extends Controller
         if ($validator->fails()){
             return Response([
                 'status' => 403,
-                'massage' => 'validation failed'
+                'massage' => 'validation failed',
+                'data' => $request->all()
             ], 403);
         }
 

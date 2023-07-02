@@ -28,7 +28,7 @@ class FacultyController extends Controller
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'university_id' => 'required|string|max:127',
+            'university_id' => 'required|integer',
             'name_km' => 'required|string|max:127'
         ]);
 
