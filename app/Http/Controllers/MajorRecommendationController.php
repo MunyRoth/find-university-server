@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\HighSchoolSubject;
 use App\Models\MajorType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,26 +20,28 @@ class MajorRecommendationController extends Controller
         $bLength = 0;
 
         foreach ($a as $key => $value) {
-            $dotProduct += $value * $b[$key];
-            $aLength += $value * $value;
-            $bLength += $b[$key] * $b[$key];
+            $dotProduct += $value['value'] * $b[$key]['value'];
+            $aLength += $value['value'] * $value['value'];
+            $bLength += $b[$key]['value'] * $b[$key]['value'];
         }
+
+        if ((sqrt($aLength) * sqrt($bLength)) == 0) return 0;
 
         return $dotProduct / (sqrt($aLength) * sqrt($bLength));
     }
 
-    function index(Request $request): Response
+    public function index(Request $request): Response
     {
         // validate the request
         $validator = Validator::make($request->all(), [
-            'khmer' => 'required|integer|max:7',
-            'maths' => 'required|integer|max:7',
-            'physics' => 'required|integer|max:7',
-            'chemistry' => 'required|integer|max:7',
-            'biology' => 'required|integer|max:7',
-            'history' => 'required|integer|max:7',
-            'geography' => 'required|integer|max:7',
-            'morality' => 'required|integer|max:7',
+            'Khmer' => 'required|integer|max:7',
+            'Mathematics' => 'required|integer|max:7',
+            'Physics' => 'required|integer|max:7',
+            'Chemistry' => 'required|integer|max:7',
+            'Biology' => 'required|integer|max:7',
+            'History' => 'required|integer|max:7',
+            'Geography' => 'required|integer|max:7',
+            'Morality' => 'required|integer|max:7',
         ]);
 
         if ($validator->fails()){
@@ -50,218 +53,60 @@ class MajorRecommendationController extends Controller
         }
 
         // Collect data
-        $items = [
-            [
-                'major' => 'IT',
-                'subjects' => [
-                    [
-                        'subject' => 'khmer',
-                        'value' => 1
-                    ],
-                    [
-                        'name' => 'maths',
-                        'value' => 1
-                    ],
-                    [
-                        'subject' => 'physic',
-                        'value' => 1
-                    ],
-                    [
-                        'subject' => 'chemistry',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'biology',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'earth',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'history',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'geography',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'morality',
-                        'value' => 0
-                    ],
-                ]
-            ],
-            [
-                'major' => 'Arts',
-                'subjects' => [
-                    [
-                        'subject' => 'khmer',
-                        'value' => 0
-                    ],
-                    [
-                        'name' => 'maths',
-                        'value' => 1
-                    ],
-                    [
-                        'subject' => 'physic',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'chemistry',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'biology',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'earth',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'history',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'geography',
-                        'value' => 1
-                    ],
-                    [
-                        'subject' => 'morality',
-                        'value' => 1
-                    ],
-                ]
-            ],
-            [
-                'major' => 'History',
-                'subjects' => [
-                    [
-                        'subject' => 'khmer',
-                        'value' => 1
-                    ],
-                    [
-                        'name' => 'maths',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'physic',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'chemistry',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'biology',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'earth',
-                        'value' => 0
-                    ],
-                    [
-                        'subject' => 'history',
-                        'value' => 1
-                    ],
-                    [
-                        'subject' => 'geography',
-                        'value' => 1
-                    ],
-                    [
-                        'subject' => 'morality',
-                        'value' => 0
-                    ],
-                ]
-            ],
-        ];
+        $majors = MajorType::get();
+        $subjects = HighSchoolSubject::get();
 
-        $items = MajorType::all();
         // Create feature vectors
         $featureVectors = [];
-        foreach ($items as $item) {
+        foreach ($majors as $item) {
             $featureVectors[] = [
                 'major' => $item['name_km'],
                 'subjects' => $item['subjects'],
             ];
         }
 
-        // Make recommendations
-        $subjects = [
-            [
-                'subject' => 'khmer',
-                'value' => $request->khmer
-            ],
-            [
-                'name' => 'maths',
-                'value' => $request->maths
-            ],
-            [
-                'subject' => 'physic',
-                'value' => $request->physic
-            ],
-            [
-                'subject' => 'chemisty',
-                'value' => $request->chemistry
-            ],
-            [
-                'subject' => 'biology',
-                'value' => $request->biology
-            ],
-            [
-                'subject' => 'history',
-                'value' => $request->history
-            ],
-            [
-                'subject' => 'geography',
-                'value' => $request->geography
-            ],
-            [
-                'subject' => 'morality',
-                'value' => $request->morality
-            ],
-        ];
-
         // Calculate the similarity between items
         $similarities = [];
         foreach ($featureVectors as $featureVector) {
-            $i = [
-                [
-                    'subject' => 'khmer',
-                    'value' => 0
-                ],
-                [
-                    'name' => 'maths',
-                    'value' => 0
-                ],
-                [
-                    'subject' => 'physics',
-                    'value' => 0
-                ],
-                [
-                    'subject' => 'chemistry',
-                    'value' => 0
-                ],
-                [
-                    'subject' => 'biology',
-                    'value' => 0
-                ],
-                [
-                    'subject' => 'history',
-                    'value' => 0
-                ],
-                [
-                    'subject' => 'geography',
-                    'value' => 0
-                ],
-                [
-                    'subject' => 'morality',
-                    'value' => 0
-                ]
-            ];
 
+            $a = [];
+            $b = [];
 
-            $similarity = $this->cosine_similarity($featureVector['subjects'], $subjects);
+            foreach ($subjects as $subject) {
+                if (count($featureVector['subjects']) != 0) {
+                    $isExist = false;
+
+                    foreach ($featureVector['subjects'] as $f) {
+                        if ($f->name_km == $subject->name_km) {
+                            $a[] = [
+                                'subject' => $subject->name_km,
+                                'value' => 1
+                            ];
+                            $isExist = true;
+                            break;
+                        }
+                    }
+
+                    if (!$isExist) {
+                        $a[] = [
+                            'subject' => $subject->name_km,
+                            'value' => 0
+                        ];
+                    }
+                } else {
+                    $a[] = [
+                        'subject' => $subject->name_km,
+                        'value' => 0
+                    ];
+                }
+
+                $b[] = [
+                    'subject' => $subject->name_km,
+                    'value' => $request[$subject->name_en]
+                ];
+            }
+
+            $similarity = $this->cosine_similarity($a, $b);
             $similarities[$featureVector['major']] = $similarity;
         }
 
