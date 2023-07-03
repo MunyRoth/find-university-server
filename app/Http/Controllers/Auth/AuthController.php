@@ -73,7 +73,6 @@ class AuthController extends Controller
         return Response([
             'status' => 201,
             'massage' => 'register successful',
-            'token' => $token,
             'data' => [
                 'token' => $token
             ]
@@ -124,7 +123,6 @@ class AuthController extends Controller
         return Response([
             'status' => 200,
             'message' => 'login successful',
-            'token' => $token,
             'data' => [
                 'token' => $token
             ]
