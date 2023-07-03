@@ -171,7 +171,7 @@ class UniversityController extends Controller
             return Response([
                 'status' => 200,
                 'message' => 'updated successfully',
-                'data' => ''
+                'data' => $university
             ], 200);
         }
 

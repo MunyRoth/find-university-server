@@ -17,6 +17,7 @@ class SubjectController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $subject->get()
         ], 200);
     }
@@ -46,46 +47,88 @@ class SubjectController extends Controller
 
         return Response([
             'status' => 201,
-            'data' => $request->all()
-        ]);
+            'message' => 'created successfully',
+            'data' => ''
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Subject $subject): Response
+    public function show($id): Response
     {
+        $subject = Subject::find($id);
+
+        if ($subject) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $subject
+            ], 200);
+        }
+
         return Response([
-            'status' => '200',
-            'data' => $subject
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Subject $subject): Response
+    public function update(Request $request, $id): Response
     {
-        $subject->name_km = $request->name_km;
-        $subject->name_en = $request->name_en;
-        $subject->save();
+        $subject = Subject::find($id);
+
+        if ($subject) {
+            if ($request->name_km != '') {
+                $subject->update([
+                    'name_km' => $request->name_km
+                ]);
+            }
+
+            if ($request->name_en != '') {
+                $subject->update([
+                    'name_en' => $request->name_en
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => $subject
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $subject
-        ]);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subject $subject): Response
+    public function destroy($id): Response
     {
-        $subject->delete();
+        $subject = Subject::find($id);
+
+        if ($subject) {
+            $subject->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'message' => 'deleted successfully'
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 }

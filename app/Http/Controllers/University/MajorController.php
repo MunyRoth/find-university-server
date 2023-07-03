@@ -17,6 +17,7 @@ class MajorController extends Controller
     {
         return Response([
             'status' => 200,
+            'message' => 'got successfully',
             'data' => $major->with('majorType', 'department', 'subjects')->get()
         ], 200);
     }
@@ -45,58 +46,94 @@ class MajorController extends Controller
 
         return Response([
             'status' => 201,
-            'data' => $request->all()
-        ]);
+            'message' => 'created successfully',
+            'data' => ''
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Major $major): Response
+    public function show($id): Response
     {
-        return Response([
-            'status' => '200',
-            'data' => $major->load('majorType', 'department', 'subjects')
-        ], 200);
-    }
+        $major = Major::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Major $major): Response
-    {
+        if ($major) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $major->load('majorType', 'department', 'subjects')
+            ], 200);
+        }
+
         return Response([
-            'status' => '200',
-            'data' => $major
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Major $major): Response
+    public function update(Request $request, $id): Response
     {
-        $major->major_type_id = $request->major_type_id;
-        $major->name_km = $request->name_km;
-        $major->name_en = $request->name_en;
-        $major->save();
+        $major = Major::find($id);
+
+        if ($major) {
+            if ($request->major_type_id != '') {
+                $major->update([
+                    'major_type_id' => $request->major_type_id
+                ]);
+            }
+
+            if ($request->name_km != '') {
+                $major->update([
+                    'name_km' => $request->name_km
+                ]);
+            }
+
+            if ($request->name_en != '') {
+                $major->update([
+                    'name_en' => $request->name_en
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => $major
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $major
-        ]);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Major $major): Response
+    public function destroy($id): Response
     {
-        $major->delete();
+        $major = Major::find($id);
+
+        if ($major) {
+            $major->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'message' => 'deleted successfully'
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 }

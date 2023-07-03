@@ -17,7 +17,8 @@ class DepartmentController extends Controller
     {
         return Response([
             'status' => 200,
-            'data' => $department->get()
+            'message' => 'got successfully',
+            'data' => $department->with('majors')->get()
         ], 200);
     }
 
@@ -44,46 +45,88 @@ class DepartmentController extends Controller
 
         return Response([
             'status' => 201,
-            'data' => $request->all()
-        ]);
+            'message' => 'created successfully',
+            'data' => ''
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Department $department): Response
+    public function show($id): Response
     {
+        $department = Department::find($id);
+
+        if ($department) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $department->load('majors')
+            ], 200);
+        }
+
         return Response([
-            'status' => '200',
-            'data' => $department->load('majors')
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department): Response
+    public function update(Request $request, $id): Response
     {
-        $department->name_km = $request->name_km;
-        $department->name_en = $request->name_en;
-        $department->save();
+        $department = Department::find($id);
+
+        if ($department) {
+            if ($request->name_km != '') {
+                $department->update([
+                    'name_km' => $request->name_km
+                ]);
+            }
+
+            if ($request->name_en != '') {
+                $department->update([
+                    'name_en' => $request->name_en
+                ]);
+            }
+
+            return Response([
+                'status' => 200,
+                'message' => 'updated successfully',
+                'data' => $department
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'data' => $department
-        ]);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department): Response
+    public function destroy($id): Response
     {
-        $department->delete();
+        $department = Department::find($id);
+
+        if ($department) {
+            $department->delete();
+
+            return Response([
+                'status' => 200,
+                'message' => 'deleted successfully',
+                'data' => ''
+            ], 200);
+        }
 
         return Response([
-            'status' => 200,
-            'message' => 'deleted successfully'
-        ], 200);
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
     }
 }
