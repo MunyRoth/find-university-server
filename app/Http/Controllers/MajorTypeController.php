@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MajorType;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +57,7 @@ class MajorTypeController extends Controller
 
         return Response([
             'status' => '200',
-            'data' => $majorType
+            'data' => $majorType->load('majors', 'subjects')
         ], 200);
     }
 
@@ -80,6 +81,28 @@ class MajorTypeController extends Controller
                 ]);
             }
 
+            // update logo
+            if (!empty($request->file('image')))
+            {
+                if ($majorType->image_url != '') {
+                    // Delete the old image file.
+                    $imageUrl = $majorType->image_url;
+                    preg_match("/\/v(\d+)\/(\w+)\/(\w+)/",$imageUrl,$recordMatch);
+                    $id = $recordMatch[2].'/'.$recordMatch[3];
+                    Cloudinary::destroy($id);
+                }
+
+                //upload new file
+                $imageUrl = Cloudinary::upload($request->file('image')->getRealPath(), [
+                    'folder' => 'find_university'
+                ])->getSecurePath();
+
+                //update in table
+                $majorType->update([
+                    'image_url' => $imageUrl
+                ]);
+            }
+
             if ($request->subjects != '') {
                 $majorType->subjects()->sync($request->subjects);
             }
@@ -87,7 +110,7 @@ class MajorTypeController extends Controller
             return Response([
                 'status' => 200,
                 'message' => 'updated successfully',
-                'data' => ''
+                'data' => $majorType
             ], 200);
         }
 
