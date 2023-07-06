@@ -31,8 +31,7 @@ class MajorController extends Controller
         $validator = Validator::make($request->all(), [
             'department_id' => 'required|integer',
             'major_type_id' => 'required|integer',
-            'name_km' => 'required|string|max:127',
-            'num_semesters' => 'required|integer|max:31'
+            'name_km' => 'required|string|max:127'
         ]);
 
         if ($validator->fails()){

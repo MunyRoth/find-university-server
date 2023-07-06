@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('name_km');
             $table->string('name_en')
                 ->nullable();
-            $table->integer('num_semesters');
+            $table->integer('num_semesters')
+                ->nullable();
             $table->timestamps();
         });
     }

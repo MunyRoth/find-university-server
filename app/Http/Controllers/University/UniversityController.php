@@ -37,7 +37,7 @@ class UniversityController extends Controller
             'logo' => 'required|image|mimes:jpeg,jpg,png|max:8095', // kilobytes
 
             'province_id' => 'required|integer|max:63',
-            'address_km' => 'required|string|max:127',
+            'address_km' => 'required|string|max:65535',
             'location' => 'required|string|max:65535'
         ]);
 

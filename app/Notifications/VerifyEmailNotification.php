@@ -37,9 +37,10 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Verify Email Address')
-            ->line('Please click the button below to verify your email address.')
-            ->action('Verify Email Address', $verificationUrl)
-            ->line('If you did not create an account, no further action is required.');
+            ->subject('ការផ្ទៀងផ្ទាត់អាសយដ្ឋានអ៊ីម៉ែល')
+            ->greeting('សួស្តី, '.$notifiable->name.'!')
+            ->line('សូមចុចប៊ូតុងខាងក្រោមដើម្បីផ្ទៀងផ្ទាត់អាសយដ្ឋានអ៊ីមែលរបស់អ្នក។')
+            ->action('ផ្ទៀងផ្ទាត់អាសយដ្ឋានអ៊ីម៉ែល', $verificationUrl)
+            ->line('ប្រសិនបើអ្នកមិនបានបង្កើតគណនីទេ មិនចាំបាច់ចុច "ផ្ទៀងផ្ទាត់អាសយដ្ឋានអ៊ីម៉ែល" ទេ។');
     }
 }

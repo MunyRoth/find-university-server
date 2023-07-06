@@ -17,7 +17,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(string $url)
+    public function __construct($url)
     {
         $this->url = $url;
     }
@@ -38,10 +38,11 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject(Lang::get('Reset Password Notification'))
-            ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
-            ->action(Lang::get('Reset Password'), $this->url)
-            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
-            ->line(Lang::get('If you did not request a password reset, no further action is required.'));
+            ->subject(Lang::get('ការកំណត់ពាក្យសម្ងាត់ឡើងវិញ'))
+            ->greeting('សួស្តី, '.$notifiable->name.'!')
+            ->line(Lang::get('អ្នកកំពុងទទួលបានអ៊ីមែលនេះ ដោយសារយើងបានទទួលសំណើកំណត់ពាក្យសម្ងាត់ឡើងវិញសម្រាប់គណនីរបស់អ្នក។'))
+            ->action(Lang::get('កំណត់ពាក់សម្ងាត់ឡើងវិញ'), $this->url)
+            ->line(Lang::get('តំណកំណត់ពាក្យសម្ងាត់ឡើងវិញនេះនឹងផុតកំណត់នៅក្នុងរយៈពេល :count នាទី.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
+            ->line(Lang::get('ប្រសិនបើអ្នកមិនបានស្នើសុំកំណត់ពាក្យសម្ងាត់ឡើងវិញទេនោះ មិនចាំបាច់ចុច "កំណត់ពាក់សម្ងាត់ឡើងវិញ" ទេ។'));
     }
 }

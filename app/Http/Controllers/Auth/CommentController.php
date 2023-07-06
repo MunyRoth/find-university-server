@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\University;
 use App\Models\User;
+use App\Notifications\NewComment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,12 @@ class CommentController extends Controller
             $comment->university_id = $request->university_id;
             $comment->comment = $request->comment;
             $comment->save();
+
+            // send comment to admin
+            $admin = User::where('role', 'Admin')->first();
+            $url = env('FRONT_URL').'/comment/check/'.$comment->id;
+
+            $admin->notify(new NewComment($user->name, $comment->comment, $url));
 
             return Response([
                 'status' => 201,
@@ -186,6 +193,44 @@ class CommentController extends Controller
                 'status' => 200,
                 'message' => 'deleted successfully',
                 'data' => ''
+            ], 200);
+        }
+
+        return Response([
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
+    }
+
+    public function approve($id): Response
+    {
+        $comments = Comment::where('id', $id);
+
+        if ($comments) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $comments
+            ], 200);
+        }
+
+        return Response([
+            'status' => 404,
+            'message' => 'not found',
+            'data' => ''
+        ], 404);
+    }
+
+    public function reject($id): Response
+    {
+        $comments = Comment::where('id', $id);
+
+        if ($comments) {
+            return Response([
+                'status' => 200,
+                'message' => 'got successfully',
+                'data' => $comments
             ], 200);
         }
 

@@ -182,5 +182,9 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/subjects/{id}', 'update');
             Route::delete('/subjects/{id}', 'destroy');
         });
+
+        // Check Comment
+        Route::get('comment/approve/{id}', [CommentController::class, 'approve']);
+        Route::get('comment/reject/{id}', [CommentController::class, 'reject']);
     });
 });
