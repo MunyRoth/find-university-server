@@ -192,8 +192,7 @@ class AuthController extends Controller
             $emailExists = User::where('email', $providerUser->getEmail())->first();
             if ($emailExists) {
                 // update user in database
-                $userUpdate = User::find($emailExists->id);
-                $userUpdate->update([
+                $emailExists->update([
                     'provider_name' => $provider,
                     'provider_id' => $providerUser->getId(),
                     'avatar' => $providerUser->getAvatar(),
