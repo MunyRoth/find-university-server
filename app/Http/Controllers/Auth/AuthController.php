@@ -188,14 +188,27 @@ class AuthController extends Controller
                 return redirect(env('FRONT_URL') . '/login?token='.$user->createToken(env('API_AUTH_TOKEN_PASSPORT_SOCIAL'))->accessToken);
             }
 
-            // store user in database
-            $user = User::create([
-                'provider_name' => $provider,
-                'provider_id' => $providerUser->getId(),
-                'avatar' => $providerUser->getAvatar(),
-                'name' => $providerUser->getName(),
-                'email' => $providerUser->getEmail(),
-            ]);
+            // check email is exists
+            $emailExists = User::where('email', $providerUser->getEmail())->first();
+            if ($emailExists) {
+                // update user in database
+                $emailExists->update([
+                    'provider_name' => $provider,
+                    'provider_id' => $providerUser->getId(),
+                    'avatar' => $providerUser->getAvatar(),
+                    'name' => $providerUser->getName()
+                ]);
+            } else {
+                // store user in database
+                $user = User::create([
+                    'provider_name' => $provider,
+                    'provider_id' => $providerUser->getId(),
+                    'avatar' => $providerUser->getAvatar(),
+                    'name' => $providerUser->getName(),
+                    'email' => $providerUser->getEmail(),
+                ]);
+            }
+
             return redirect(env('FRONT_URL') . '/register?token='.$user->createToken(env('API_AUTH_TOKEN_PASSPORT_SOCIAL'))->accessToken);
         } catch (Exception $ex) {
             return redirect(env('FRONT_URL') . '/server?error='.$ex);
