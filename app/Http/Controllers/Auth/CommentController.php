@@ -209,7 +209,10 @@ class CommentController extends Controller
 
         if ($comment) {
             $comment->update([
-                'is_pending' => false,
+                'is_pending' => false
+            ]);
+
+            $comment->update([
                 'is_approved' => true
             ]);
 
@@ -233,7 +236,10 @@ class CommentController extends Controller
 
         if ($comment) {
             $comment->update([
-                'is_pending' => false,
+                'is_pending' => false
+            ]);
+
+            $comment->update([
                 'is_approved' => false
             ]);
 
