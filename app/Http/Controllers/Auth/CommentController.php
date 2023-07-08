@@ -211,16 +211,10 @@ class CommentController extends Controller
 
             if ($request->comment != '') {
                 $comment->update([
-                    'comment' => $request->comment,
-                ]);
-                $comment->update([
-                    'is_pending' => false
-                ]);
-
-                $comment->update([
+                    'comment' => 'jjjjjjjjj',
+                    'is_pending' => false,
                     'is_approved' => true
                 ]);
-
 
             }
 
