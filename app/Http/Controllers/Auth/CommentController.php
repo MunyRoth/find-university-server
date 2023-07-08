@@ -56,7 +56,7 @@ class CommentController extends Controller
 
             // send comment to admin
             $admin = User::where('role', 'Admin')->first();
-            $url = env('FRONT_URL').'/comment/check/'.$comment->id;
+            $url = env('FRONT_URL').'/admin/tablecomment';
 
             $admin->notify(new NewComment($user->name, $comment->comment, $url));
 
@@ -205,13 +205,18 @@ class CommentController extends Controller
 
     public function approve($id): Response
     {
-        $comments = Comment::where('id', $id);
+        $comment = Comment::find($id);
 
-        if ($comments) {
+        if ($comment) {
+            $comment->update([
+                'is_pending' => false,
+                'is_approved' => true
+            ]);
+
             return Response([
                 'status' => 200,
-                'message' => 'got successfully',
-                'data' => $comments
+                'message' => 'updated successfully',
+                'data' => $comment
             ], 200);
         }
 
@@ -224,13 +229,18 @@ class CommentController extends Controller
 
     public function reject($id): Response
     {
-        $comments = Comment::where('id', $id);
+        $comment = Comment::find($id);
 
-        if ($comments) {
+        if ($comment) {
+            $comment->update([
+                'is_pending' => false,
+                'is_approved' => false
+            ]);
+
             return Response([
                 'status' => 200,
-                'message' => 'got successfully',
-                'data' => $comments
+                'message' => 'updated successfully',
+                'data' => $comment
             ], 200);
         }
 
