@@ -184,7 +184,7 @@ Route::middleware('auth:api')->group(function () {
         });
 
         // Check Comment
-        Route::get('comment/approve/{id}', [CommentController::class, 'approve']);
-        Route::get('comment/reject/{id}', [CommentController::class, 'reject']);
+        Route::put('comment/approve/{id}', [CommentController::class, 'approve']);
+        Route::put('comment/reject/{id}', [CommentController::class, 'reject']);
     });
 });
