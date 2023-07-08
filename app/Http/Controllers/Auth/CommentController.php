@@ -208,17 +208,17 @@ class CommentController extends Controller
         $comment = Comment::find($id);
 
         if ($comment) {
-            $comment->update([
-                'is_pending' => false
-            ]);
-
-            $comment->update([
-                'is_approved' => true
-            ]);
 
             if ($request->comment != '') {
                 $comment->update([
                     'comment' => $request->comment
+                ]);
+                $comment->update([
+                    'is_pending' => false
+                ]);
+
+                $comment->update([
+                    'is_approved' => 1
                 ]);
             }
 
