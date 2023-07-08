@@ -209,11 +209,11 @@ class CommentController extends Controller
 
         if ($comment) {
             $comment->update([
-                'is_pending' => false
+                'is_pending' => 0
             ]);
 
             $comment->update([
-                'is_approved' => true
+                'is_approved' => 1
             ]);
 
             return Response([
@@ -236,11 +236,11 @@ class CommentController extends Controller
 
         if ($comment) {
             $comment->update([
-                'is_pending' => false
+                'is_pending' => 0
             ]);
 
             $comment->update([
-                'is_approved' => false
+                'is_approved' => 0
             ]);
 
             return Response([
