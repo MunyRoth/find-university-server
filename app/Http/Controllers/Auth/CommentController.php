@@ -203,20 +203,16 @@ class CommentController extends Controller
         ], 404);
     }
 
-    public function approve(Request $request, $id): Response
+    public function approve($id): Response
     {
         $comment = Comment::find($id);
 
         if ($comment) {
 
-            if ($request->comment != '') {
-                $comment->update([
-                    'comment' => 'jjjjjjjjj',
-                    'is_pending' => false,
-                    'is_approved' => true
-                ]);
-
-            }
+            $comment->update([
+                'is_pending' => false,
+                'is_approved' => true
+            ]);
 
             $comment->save();
             $comment = Comment::find($id);

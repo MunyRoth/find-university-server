@@ -12,7 +12,9 @@ class Comment extends Model
 
     protected $fillable = [
         'university_id',
-        'comment'
+        'comment',
+        'is_pending',
+        'is_approved'
     ];
 
     public function user(): BelongsTo
